@@ -6,18 +6,62 @@
   <title>Cosmo | Music Player</title>
   <link rel="stylesheet" href="style.css" />
   <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css" />
+  <style>
+    /* Temporary inline styles for video fallback */
+    .video-background {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      object-fit: cover;
+    }
+    .video-fallback {
+      display: none;
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
+      background: url('assets/background-fallback.jpg') center/cover no-repeat;
+    }
+    .no-video .video-background {
+      display: none;
+    }
+    .no-video .video-fallback {
+      display: block;
+    }
+  </style>
 </head>
+
 <body>
+  <div class="loading-screen" id="loadingScreen">
+    <h1>Click to Continue</h1>
+  </div>
+
+<body>
+  <!-- Video Background with Multiple Fallbacks -->
+  <video class="video-background" autoplay muted loop playsinline>
+    <source src="assets/background.mp4" type="video/mp4">
+    <source src="assets/background.webm" type="video/webm">
+    Your browser does not support HTML5 video.
+  </video>
+  <div class="video-fallback"></div>
+
+  <!-- Main Content -->
   <button id="audioToggle"><i class="fas fa-volume-up"></i></button>
   <div class="container">
     <div class="profile-section">
       <img src="assets/profile.jpg" alt="Cosmo" class="profile-pic" id="profilePic" />
-      <h1 class="username">COSMO</h1>
+      <input type="file" id="profileUpload" accept="image/*" style="display:none">
+      <h1 class="username">COSMO</h1
       <p class="bio">Pants down, money up!</p>
     </div>
     <div class="music-player">
       <div class="song-info">
-        <p id="songTitle">Playing: fallback-music.mp3</p>
+        <p id="songTitle">Sandu Ciorba - Pe cimpoi</p>
         <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
         <div class="time-display">
           <span id="currentTime">00:00</span>
@@ -31,6 +75,15 @@
       </div>
     </div>
   </div>
+
+  <script>
+    // Video support detection
+    document.addEventListener('DOMContentLoaded', function() {
+      if (!document.createElement('video').canPlayType) {
+        document.body.classList.add('no-video');
+      }
+    });
+  </script>
   <script src="script.js"></script>
 </body>
 </html>
