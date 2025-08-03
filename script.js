@@ -37,9 +37,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSongInfo();
   }
 
-  // 4. Update song info display
+  // 4. Update song info display - CHANGED THIS FUNCTION
   function updateSongInfo() {
-    songTitle.textContent = `Now Playing: ${songs[currentSongIndex].name}`;
+    songTitle.textContent = songs[currentSongIndex].name; // Removed "Now Playing:"
     durationDisplay.textContent = formatTime(audio.duration);
   }
 
