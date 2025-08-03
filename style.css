@@ -1,12 +1,99 @@
+.loading-screen {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--bg-dark);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 2000;
+  transition: opacity 0.7s ease, visibility 0.7s ease;
+  cursor: pointer;
+}
+
+.loading-screen h1 {
+  color: white;
+  font-size: 2rem;
+  text-align: center;
+  background: linear-gradient(90deg, var(--primary), var(--secondary));
+  -webkit-background-clip: text;
+  color: transparent;
+  animation: pulse 1.5s infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { transform: scale(1); opacity: 0.8; }
+  50% { transform: scale(1.05); opacity: 1; }
+}
+
+.loading-screen.hidden {
+  opacity: 0;
+  visibility: hidden;
+  pointer-events: none;
+}
+
+
 :root {
   --primary: #3871ec;
   --secondary: #ff4d8d;
   --text-muted: #aaa;
   --bg-dark: #0a0a0a;
   --bg-light: rgba(255, 255, 255, 0.1);
+  --overlay-color: rgba(0, 0, 0, 0.7);
+  --fallback-brightness: 0.6;
 }
 
-/* Loading Indicator Styles */
+/* ==================== */
+/* Video Background System */
+/* ==================== */
+.video-background {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+  z-index: -2;
+  filter: brightness(var(--fallback-brightness));
+}
+
+.video-fallback {
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  z-index: -2;
+  background: var(--overlay-color), 
+              url('assets/background-fallback.jpg') center/cover no-repeat;
+  filter: brightness(var(--fallback-brightness));
+}
+
+body::after {
+  content: '';
+  position: fixed;
+  top: 0;
+  left: 0;
+  width: 100%;
+  height: 100%;
+  background: var(--overlay-color);
+  z-index: -1;
+}
+
+/* Fallback for browsers that don't support video */
+.no-video .video-background {
+  display: none;
+}
+
+.no-video .video-fallback {
+  display: block;
+}
+
+/* ==================== */
+/* Loading Indicator */
+/* ==================== */
 .loading-indicator {
   position: fixed;
   top: 0;
@@ -42,17 +129,10 @@
   margin-top: 10px;
 }
 
-.fallback-mode .status-indicator {
-  color: #ff9800;
-}
-
-[aria-hidden="true"] {
-  display: none;
-}
-
-/* Player Styles */
+/* ==================== */
+/* Core Player Styles */
+/* ==================== */
 body {
-  background: var(--bg-dark);
   color: white;
   font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
   margin: 0;
@@ -68,8 +148,15 @@ body {
   max-width: 500px;
   width: 100%;
   padding: 20px;
+  background: rgba(10, 10, 10, 0.7);
+  backdrop-filter: blur(10px);
+  border-radius: 15px;
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.5);
 }
 
+/* ==================== */
+/* Profile Section */
+/* ==================== */
 .profile-section {
   margin-bottom: 2rem;
 }
@@ -83,6 +170,7 @@ body {
   box-shadow: 0 0 20px rgba(56, 113, 236, 0.5);
   transition: transform 0.3s ease;
   cursor: pointer;
+  background: rgba(0, 0, 0, 0.3);
 }
 
 .profile-pic:hover {
@@ -97,14 +185,19 @@ body {
   background-clip: text;
   color: transparent;
   font-weight: 700;
+  text-shadow: 0 2px 4px rgba(0, 0, 0, 0.5);
 }
 
 .bio {
   color: var(--text-muted);
   font-size: 1.1rem;
   margin-bottom: 30px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
+/* ==================== */
+/* Player Controls */
+/* ==================== */
 .player-controls {
   display: flex;
   justify-content: center;
@@ -126,6 +219,8 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 .player-controls button:hover {
@@ -140,10 +235,14 @@ body {
   background: var(--secondary);
 }
 
+/* ==================== */
+/* Progress & Track Info */
+/* ==================== */
 #songTitle {
   font-size: 1.2rem;
   margin: 20px 0;
   min-height: 24px;
+  text-shadow: 0 1px 3px rgba(0, 0, 0, 0.5);
 }
 
 .progress-container {
@@ -169,8 +268,12 @@ body {
   font-size: 0.9rem;
   color: var(--text-muted);
   margin-top: 5px;
+  text-shadow: 0 1px 2px rgba(0, 0, 0, 0.5);
 }
 
+/* ==================== */
+/* Audio Controls */
+/* ==================== */
 #audioToggle {
   position: absolute;
   top: 20px;
@@ -184,17 +287,17 @@ body {
   font-size: 1.2rem;
   cursor: pointer;
   transition: all 0.2s ease;
+  backdrop-filter: blur(5px);
+  border: 1px solid rgba(255, 255, 255, 0.1);
 }
 
 #audioToggle:hover {
   background: rgba(255, 255, 255, 0.2);
 }
 
-#profileUpload {
-  display: none;
-}
-
-/* Fallback Mode Styles */
+/* ==================== */
+/* Fallback Mode */
+/* ==================== */
 .fallback-mode {
   --primary: #ff9800;
   --secondary: #ff5722;
@@ -215,4 +318,12 @@ body {
 
 .fallback-mode #playPauseBtn {
   background: var(--secondary);
+}
+
+/* ==================== */
+/* Hidden Elements */
+/* ==================== */
+[aria-hidden="true"],
+#profileUpload {
+  display: none;
 }
