@@ -35,13 +35,12 @@
     }
   </style>
 </head>
-
 <body>
+  <!-- Click to Continue Screen -->
   <div class="loading-screen" id="loadingScreen">
     <h1>Click to Continue</h1>
   </div>
 
-<body>
   <!-- Video Background with Multiple Fallbacks -->
   <video class="video-background" autoplay muted loop playsinline>
     <source src="assets/background.mp4" type="video/mp4">
@@ -56,13 +55,15 @@
     <div class="profile-section">
       <img src="assets/profile.jpg" alt="Cosmo" class="profile-pic" id="profilePic" />
       <input type="file" id="profileUpload" accept="image/*" style="display:none">
-      <h1 class="username">COSMO</h1
+      <h1 class="username">COSMO</h1>
       <p class="bio">Pants down, money up!</p>
     </div>
     <div class="music-player">
       <div class="song-info">
         <p id="songTitle">Sandu Ciorba - Pe cimpoi</p>
-        <div class="progress-container"><div class="progress-bar" id="progressBar"></div></div>
+        <div class="progress-container">
+          <div class="progress-bar" id="progressBar"></div>
+        </div>
         <div class="time-display">
           <span id="currentTime">00:00</span>
           <span id="duration">00:00</span>
