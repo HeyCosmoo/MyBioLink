@@ -1,5 +1,22 @@
 document.addEventListener('DOMContentLoaded', () => {
-  const audio = new Audio('assets/fallback-music.mp3');
+  // 1. Song playlist array - ADD YOUR SONGS HERE
+  const songs = [
+    { 
+      path: 'assets/Sandu Ciorba - Pe cimpoi.mp3', 
+      name: 'Sandu Ciorba - Pe cimpoi' 
+    },
+    { 
+      path: 'assets/Nikolas - Campioana.mp3', 
+      name: 'Nikolas feat. Weedz - Campioana' 
+    },
+    { 
+      path: 'assets/song3.mp3', 
+      name: 'Relaxing Beat' 
+    }
+  ];
+
+  // 2. Player elements
+  const audio = new Audio(songs[0].path);
   const playPauseBtn = document.getElementById('playPauseBtn');
   const prevBtn = document.getElementById('prevBtn');
   const nextBtn = document.getElementById('nextBtn');
@@ -11,19 +28,45 @@ document.addEventListener('DOMContentLoaded', () => {
 
   let isPlaying = false;
   let isMuted = false;
+  let currentSongIndex = 0;
 
-  audio.loop = true;
-  audio.volume = 0.3;
-  audio.autoplay = true;
-  audio.addEventListener('canplay', () => {
+  // 3. Initialize player
+  function initPlayer() {
+    audio.volume = 0.3;
+    audio.loop = false;
+    updateSongInfo();
+  }
+
+  // 4. Update song info display
+  function updateSongInfo() {
+    songTitle.textContent = `Now Playing: ${songs[currentSongIndex].name}`;
     durationDisplay.textContent = formatTime(audio.duration);
-  });
+  }
 
+  // 5. Play next song
+  function playNext() {
+    currentSongIndex = (currentSongIndex + 1) % songs.length;
+    switchSong();
+  }
+
+  // 6. Play previous song
+  function playPrevious() {
+    currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
+    switchSong();
+  }
+
+  // 7. Switch songs
+  function switchSong() {
+    audio.src = songs[currentSongIndex].path;
+    audio.play();
+    updateSongInfo();
+  }
+
+  // 8. Event listeners
   audio.addEventListener('timeupdate', () => {
     const progressPercent = (audio.currentTime / audio.duration) * 100;
     progressBar.style.width = `${progressPercent}%`;
     currentTimeDisplay.textContent = formatTime(audio.currentTime);
-    durationDisplay.textContent = formatTime(audio.duration);
   });
 
   audio.addEventListener('play', () => {
@@ -36,21 +79,14 @@ document.addEventListener('DOMContentLoaded', () => {
     playPauseBtn.innerHTML = '<i class="fas fa-play"></i>';
   });
 
+  audio.addEventListener('ended', playNext);
+
   playPauseBtn.addEventListener('click', () => {
-    if (isPlaying) {
-      audio.pause();
-    } else {
-      audio.play();
-    }
+    isPlaying ? audio.pause() : audio.play();
   });
 
-  prevBtn.addEventListener('click', () => {
-    audio.currentTime = 0;
-  });
-
-  nextBtn.addEventListener('click', () => {
-    audio.currentTime = audio.duration - 0.1;
-  });
+  prevBtn.addEventListener('click', playPrevious);
+  nextBtn.addEventListener('click', playNext);
 
   audioToggle.addEventListener('click', () => {
     isMuted = !isMuted;
@@ -73,8 +109,6 @@ document.addEventListener('DOMContentLoaded', () => {
     return `${mins.toString().padStart(2, '0')}:${secs.toString().padStart(2, '0')}`;
   }
 
-  // Try auto play after user interaction fallback
-  document.body.addEventListener('click', () => {
-    if (!isPlaying) audio.play();
-  }, { once: true });
+  // Initialize
+  initPlayer();
 });
