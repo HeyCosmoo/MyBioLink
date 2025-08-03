@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // 1. Song playlist array - ADD YOUR SONGS HERE
+  // Handle Click to Continue screen
+  const loadingScreen = document.getElementById('loadingScreen');
+  loadingScreen.addEventListener('click', () => {
+    loadingScreen.classList.add('hidden');
+    document.body.classList.add('show-player');
+    // Optional: Autoplay music after click
+    audio.play();
+  });
+
+  // 1. Song playlist array
   const songs = [
     { 
       path: 'assets/Sandu Ciorba - Pe cimpoi.mp3', 
@@ -37,9 +46,9 @@ document.addEventListener('DOMContentLoaded', () => {
     updateSongInfo();
   }
 
-  // 4. Update song info display - CHANGED THIS FUNCTION
+  // 4. Update song info display
   function updateSongInfo() {
-    songTitle.textContent = songs[currentSongIndex].name; // Removed "Now Playing:"
+    songTitle.textContent = `Now Playing: ${songs[currentSongIndex].name}`;
     durationDisplay.textContent = formatTime(audio.duration);
   }
 
