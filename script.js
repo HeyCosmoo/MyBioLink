@@ -1,13 +1,4 @@
 document.addEventListener('DOMContentLoaded', () => {
-  // Handle Click to Continue screen
-  const loadingScreen = document.getElementById('loadingScreen');
-  loadingScreen.addEventListener('click', () => {
-    loadingScreen.classList.add('hidden');
-    document.body.classList.add('show-player');
-    // Optional: Autoplay music after click
-    audio.play();
-  });
-
   // 1. Song playlist array
   const songs = [
     { 
@@ -34,44 +25,53 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.getElementById('progressBar');
   const currentTimeDisplay = document.getElementById('currentTime');
   const durationDisplay = document.getElementById('duration');
+  const loadingScreen = document.getElementById('loadingScreen');
 
   let isPlaying = false;
   let isMuted = false;
   let currentSongIndex = 0;
 
-  // 3. Initialize player
+  // Handle Click to Continue screen
+  loadingScreen.addEventListener('click', () => {
+    loadingScreen.classList.add('hidden');
+    document.body.classList.add('show-player');
+    // Autoplay music after click
+    audio.play();
+  });
+
+  // Initialize player
   function initPlayer() {
     audio.volume = 0.3;
     audio.loop = false;
     updateSongInfo();
   }
 
-  // 4. Update song info display
+  // Update song info display
   function updateSongInfo() {
     songTitle.textContent = `Now Playing: ${songs[currentSongIndex].name}`;
     durationDisplay.textContent = formatTime(audio.duration);
   }
 
-  // 5. Play next song
+  // Play next song
   function playNext() {
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     switchSong();
   }
 
-  // 6. Play previous song
+  // Play previous song
   function playPrevious() {
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     switchSong();
   }
 
-  // 7. Switch songs
+  // Switch songs
   function switchSong() {
     audio.src = songs[currentSongIndex].path;
     audio.play();
     updateSongInfo();
   }
 
-  // 8. Event listeners
+  // Event listeners
   audio.addEventListener('timeupdate', () => {
     const progressPercent = (audio.currentTime / audio.duration) * 100;
     progressBar.style.width = `${progressPercent}%`;
