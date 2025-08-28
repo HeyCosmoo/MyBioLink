@@ -1,17 +1,26 @@
 document.addEventListener('DOMContentLoaded', () => {
+  // Handle Click to Continue screen
+  const loadingScreen = document.getElementById('loadingScreen');
+  loadingScreen.addEventListener('click', () => {
+    loadingScreen.classList.add('hidden');
+    document.body.classList.add('show-player');
+    // Optional: Autoplay music after click
+    audio.play();
+  });
+
   // 1. Song playlist array
   const songs = [
-    { 
-      path: 'assets/Sandu Ciorba - Pe cimpoi.mp3', 
-      name: 'Sandu Ciorba - Pe cimpoi' 
-    },
     { 
       path: 'assets/Nikolas - Campioana.mp3', 
       name: 'Nikolas feat. Weedz - Campioana' 
     },
     { 
-      path: 'assets/song3.mp3', 
-      name: 'Relaxing Beat' 
+      path: 'assets/Sandu Ciorba - Pe cimpoi.mp3', 
+      name: 'Sandu Ciorba - Pe cimpoi' 
+    },
+    { 
+      path: '.', 
+      name: 'Bitch ass nigga' 
     }
   ];
 
@@ -25,53 +34,44 @@ document.addEventListener('DOMContentLoaded', () => {
   const progressBar = document.getElementById('progressBar');
   const currentTimeDisplay = document.getElementById('currentTime');
   const durationDisplay = document.getElementById('duration');
-  const loadingScreen = document.getElementById('loadingScreen');
 
   let isPlaying = false;
   let isMuted = false;
   let currentSongIndex = 0;
 
-  // Handle Click to Continue screen
-  loadingScreen.addEventListener('click', () => {
-    loadingScreen.classList.add('hidden');
-    document.body.classList.add('show-player');
-    // Autoplay music after click
-    audio.play();
-  });
-
-  // Initialize player
+  // 3. Initialize player
   function initPlayer() {
     audio.volume = 0.3;
     audio.loop = false;
     updateSongInfo();
   }
 
-  // Update song info display
+  // 4. Update song info display
   function updateSongInfo() {
     songTitle.textContent = `Now Playing: ${songs[currentSongIndex].name}`;
     durationDisplay.textContent = formatTime(audio.duration);
   }
 
-  // Play next song
+  // 5. Play next song
   function playNext() {
     currentSongIndex = (currentSongIndex + 1) % songs.length;
     switchSong();
   }
 
-  // Play previous song
+  // 6. Play previous song
   function playPrevious() {
     currentSongIndex = (currentSongIndex - 1 + songs.length) % songs.length;
     switchSong();
   }
 
-  // Switch songs
+  // 7. Switch songs
   function switchSong() {
     audio.src = songs[currentSongIndex].path;
     audio.play();
     updateSongInfo();
   }
 
-  // Event listeners
+  // 8. Event listeners
   audio.addEventListener('timeupdate', () => {
     const progressPercent = (audio.currentTime / audio.duration) * 100;
     progressBar.style.width = `${progressPercent}%`;
