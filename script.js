@@ -11,16 +11,16 @@ document.addEventListener('DOMContentLoaded', () => {
   // 1. Song playlist array
   const songs = [
     { 
-      path: 'assets/Nikolas - Campioana.mp3', 
-      name: 'Nikolas feat. Weedz - Campioana' 
-    },
-    { 
-      path: 'assets/Sandu Ciorba - Pe cimpoi.mp3', 
-      name: 'Sandu Ciorba - Pe cimpoi' 
+      path: 'assets/pookie wookie.mp3', 
+      name: 'pookie wookie' 
     },
     { 
       path: '.', 
-      name: 'Bitch ass nigga' 
+      name: 'ez' 
+    },
+    { 
+      path: 'assets/song3.mp3', 
+      name: 'Relaxing Beat' 
     }
   ];
 
