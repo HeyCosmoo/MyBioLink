@@ -5,20 +5,50 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="cosmo's Biolink">
-    <meta name="keywords" content="cosmo, HCF, minecraft, Biolink">
+    <meta name="description" content="Cosmo's Biolink">
+    <meta name="keywords" content="Cosmo, HCF, minecraft, Biolink">
+    
+    <!-- Stylesheets -->
     <link rel="stylesheet" href="assets/stylesheets/icons.css">
     <link rel="stylesheet" href="assets/stylesheets/style.css">
+    <link rel="stylesheet" href="assets/stylesheets/audio-control.css">
+    
+    <!-- Favicon -->
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
     <link rel="icon" sizes="32x32" href="assets/images/favicon-32x32.png" type="image/png">
     <link rel="icon" sizes="16x16" href="assets/images/favicon-16x16.png" type="image/png">
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" type="image/png">
     <link rel="icon" sizes="192x192" href="assets/images/android-chrome-192x192.png" type="image/png">
     <link rel="icon" sizes="512x512" href="assets/images/android-chrome-512x512.png" type="image/png">
-    <link rel="stylesheet" href="assets/stylesheets/audio-control.css">
+    
     <title>Cosmo</title>
+    
+    <!-- Custom Styles for Larger Icons and Layout -->
     <style>
-        /* Ensure overlay looks good and sits above everything */
+        /* Make the navigation link bigger */
+        .lnk {
+            font-size: 1.8rem;
+            font-weight: bold;
+            text-decoration: none;
+            transition: color 0.3s ease;
+        }
+        
+        /* Make the social icons MUCH bigger */
+        .fa-brands {
+            font-size: 3rem !important;
+            margin: 0 15px;
+            transition: transform 0.3s ease;
+        }
+        .fa-brands:hover {
+            transform: scale(1.2);
+        }
+        
+        /* Adjust the main name to be bigger */
+        .g h1 {
+            font-size: 3rem !important;
+        }
+        
+        /* Overlay styles - Must be ABOVE everything */
         #overlay {
             position: fixed;
             top: 0;
@@ -30,17 +60,17 @@
             display: flex;
             align-items: center;
             justify-content: center;
-            font-size: 1.5rem;
+            font-size: 2rem;
             cursor: pointer;
             z-index: 10000;
-            transition: opacity 0.5s ease;
+            transition: opacity 0.8s ease;
         }
-        /* Hide overlay after fade-out */
         #overlay.fade-out {
             opacity: 0;
             pointer-events: none;
         }
-        /* Ensure video stays behind content */
+        
+        /* Background video covers full screen */
         #background-video {
             position: fixed;
             top: 0;
@@ -48,24 +78,29 @@
             width: 100%;
             height: 100%;
             object-fit: cover;
-            z-index: -1;
+            z-index: -2;
+        }
+        
+        /* Fallback background color for while video loads */
+        body {
+            background-color: black;
         }
     </style>
 </head>
 
 <body>
-    <!-- Custom overlay -->
+    <!-- Click-to-Enter Overlay -->
     <div id="overlay">
         <p><i>Click to Enter</i></p>
     </div>
 
-    <!-- Background video (initially paused, will play after overlay click) -->
-    <video loop muted playsinline id="background-video" preload="metadata">
-        <source src="assets/videos/video.mp4" type="video/mp4">
+    <!-- Background Video from CDN -->
+    <video autoplay loop muted playsinline id="background-video" preload="auto">
+        <source src="https://files.catbox.moe/i8udek.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <!-- Audio control for video volume -->
+    <!-- Black Audio Control -->
     <div class="audio-control">
         <button id="mute-button" aria-label="Mute"></button>
         <div class="slider-container">
@@ -73,57 +108,54 @@
         </div>
     </div>
 
+    <!-- Header with Navigation -->
     <header id="entrypoint">
         <nav>
-            <div style="display: flex;align-items: center;padding: 30px 10%;flex-wrap:wrap;">
-                <span style="margin-right: auto;">cosmo</span>
-                <a href="friends.html" class="lnk"><span style="color:var(--accent)">My</span> Friends</a>
+            <div style="display: flex; align-items: center; padding: 30px 10%; flex-wrap: wrap;">
+                <span style="margin-right: auto; font-size: 2rem;">Cosmo</span>
+                <a href="friends.html" class="lnk"><span style="color:var(--accent);">My</span> Friends</a>
             </div>
         </nav>
     </header>
 
+    <!-- Main Content Section -->
     <section>
         <div class="g">
-            <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Cosmo</h1>
-            <div id="line" style="border-bottom: 1px solid #e5ebf1; max-width: 285px; margin: 16px; width: 100%;"></div>
-            <div style="flex-wrap: wrap;display: flex;margin: 0;">
-                <a href="https://discord.com/users/1272313208459362344" target="_blank" aria-label="discord @ cosmo"><i class="fa-brands discord"></i></a>
-                <a href="https://t.me/CutMyNameOnYou" target="_blank" aria-label="telegram @ cosmo"><i class="fa-brands telegram"></i></a>
-                <a href="https://github.com/heycosmoo" target="_blank" aria-label="github @ cosmo"><i class="fa-brands github"></i></a>
-                <a href="https://discord.gg/cosmo" target="_blank" aria-label="discord @ cosmo"><i class="fa-brands discord"></i></a>
+            <h1 style="font-size: 3rem; margin-bottom: 0; font-weight: 400;">Cosmo</h1>
+            <div id="line" style="border-bottom: 1px solid #e5ebf1; max-width: 400px; margin: 20px; width: 100%;"></div>
+            <div style="flex-wrap: wrap; display: flex; margin: 20px 0;">
+                <a href="https://discord.com/users/1272313208459362344" target="_blank" aria-label="discord"><i class="fa-brands discord"></i></a>
+                <a href="https://t.me/CutMyNameOnYou" target="_blank" aria-label="telegram"><i class="fa-brands telegram"></i></a>
+                <a href="https://github.com/wiremoneyy" target="_blank" aria-label="github"><i class="fa-brands github"></i></a>
             </div>
         </div>
     </section>
 
     <footer style="padding: 16px; display: flex; justify-content: center;"></footer>
 
+    <!-- JavaScript Libraries and Scripts -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="assets/js/mute-button.js"></script>
 
+    <!-- Overlay Click Handler & Video Play Logic -->
     <script>
-        // Overlay click handler: fade out and play video
         const overlay = document.getElementById('overlay');
         const video = document.getElementById('background-video');
 
         if (overlay && video) {
             overlay.addEventListener('click', function() {
-                // Start video play
-                video.play().then(() => {
-                    console.log('Video started');
-                }).catch(err => {
-                    console.warn('Video play error:', err);
-                });
-                // Fade out overlay
+                // Attempt to play the video when overlay is clicked
+                video.play().catch(e => console.log('Video play error:', e));
+                // Fade out the overlay
                 overlay.classList.add('fade-out');
-                // Remove overlay from DOM after transition ends
-                setTimeout(() => {
-                    overlay.style.display = 'none';
-                }, 500);
+                // Remove overlay from DOM after transition
+                setTimeout(() => { overlay.style.display = 'none'; }, 800);
             });
         }
     </script>
 
-    <script language="javascript">
+    <!-- Animated Title Script -->
+    <script>
         var rev = "fwd";
         function titlebar(val){
             var msg  = "Cosmo ╰（‵□′）╯";
@@ -136,21 +168,18 @@
                     scroll = msg.substr(0,pos);
                     document.title = scroll;
                     timer = window.setTimeout("titlebar("+pos+")",speed);
-                }
-                else {
+                } else {
                     rev = "bwd";
                     timer = window.setTimeout("titlebar("+pos+")",speed);
                 }
-            }
-            else {
+            } else {
                 if(pos > 0) {
                     pos = pos-1;
                     var ale = le-pos;
                     scrol = msg.substr(ale,le);
                     document.title = scrol;
                     timer = window.setTimeout("titlebar("+pos+")",speed);
-                }
-                else {
+                } else {
                     rev = "fwd";
                     timer = window.setTimeout("titlebar("+pos+")",speed);
                 }
