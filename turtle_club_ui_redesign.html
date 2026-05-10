@@ -1,0 +1,188 @@
+
+<style>
+*{box-sizing:border-box;margin:0;padding:0}
+body{font-family:var(--font-mono, monospace);font-size:12px;background:#111;color:#e0e0e0}
+:root{--accent:#4ade80;--accent2:#22c55e;--bg0:#0e0e0e;--bg1:#161616;--bg2:#1e1e1e;--bg3:#252525;--border:#2a2a2a;--text:#d4d4d4;--muted:#666}
+.shell{display:flex;flex-direction:column;height:580px;background:var(--bg0);border:1px solid var(--border);border-radius:6px;overflow:hidden}
+.menubar{display:flex;align-items:center;gap:6px;padding:0 10px;height:30px;background:var(--bg1);border-bottom:1px solid var(--border);flex-shrink:0}
+.menubar::before{content:'';display:block;width:100%;height:1px;position:absolute;top:30px;left:0;background:linear-gradient(90deg,transparent,var(--accent),transparent);opacity:.3}
+.logo{font-size:11px;font-weight:700;color:var(--accent);letter-spacing:.5px;margin-right:4px}
+.vsep{width:1px;height:14px;background:var(--border);margin:0 2px}
+.mbtn{padding:2px 9px;font-size:11px;font-family:inherit;background:transparent;border:1px solid transparent;border-radius:3px;color:var(--muted);cursor:pointer;transition:all .15s}
+.mbtn:hover{color:var(--text);border-color:var(--border)}
+.mbtn.active{color:var(--accent);border-color:var(--accent);background:rgba(74,222,128,.07)}
+.fps{margin-left:auto;font-size:10px;color:var(--muted)}
+.content{display:flex;flex:1;overflow:hidden}
+.sidebar{width:110px;background:var(--bg1);border-right:1px solid var(--border);display:flex;flex-direction:column;padding:8px 0;flex-shrink:0}
+.stab{display:flex;align-items:center;gap:6px;padding:6px 12px;font-size:11px;color:var(--muted);cursor:pointer;border-left:2px solid transparent;transition:all .15s}
+.stab:hover{color:var(--text);background:var(--bg2)}
+.stab.active{color:var(--accent);border-left-color:var(--accent);background:rgba(74,222,128,.05)}
+.stab i{font-size:14px}
+.main{flex:1;display:flex;gap:0;overflow:hidden}
+.panel{flex:1;padding:10px;overflow-y:auto;background:var(--bg0)}
+.panel+.panel{border-left:1px solid var(--border)}
+.phead{font-size:10px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin-bottom:8px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+.row{display:flex;align-items:center;justify-content:space-between;padding:4px 0;gap:8px}
+.row label{font-size:11px;color:var(--text);user-select:none;flex:1}
+.chk{position:relative;width:28px;height:16px;flex-shrink:0}
+.chk input{opacity:0;width:0;height:0;position:absolute}
+.chk-track{display:block;width:28px;height:16px;background:var(--bg3);border:1px solid var(--border);border-radius:8px;cursor:pointer;transition:all .2s}
+.chk input:checked~.chk-track{background:rgba(74,222,128,.2);border-color:var(--accent)}
+.chk-thumb{position:absolute;top:3px;left:3px;width:8px;height:8px;border-radius:50%;background:var(--muted);pointer-events:none;transition:all .2s}
+.chk input:checked~.chk-thumb{left:15px;background:var(--accent)}
+.swatch{width:16px;height:16px;border-radius:3px;border:1px solid var(--border);flex-shrink:0;cursor:pointer}
+.slider-wrap{display:flex;align-items:center;gap:6px;flex:1}
+.slider-wrap input[type=range]{flex:1;height:2px;-webkit-appearance:none;appearance:none;background:var(--bg3);border-radius:2px;outline:none;cursor:pointer}
+.slider-wrap input[type=range]::-webkit-slider-thumb{-webkit-appearance:none;width:10px;height:10px;border-radius:50%;background:var(--accent);cursor:pointer}
+.slider-val{font-size:10px;color:var(--muted);min-width:28px;text-align:right}
+.combo{font-size:11px;font-family:inherit;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:2px 5px;cursor:pointer;outline:none}
+.combo:focus{border-color:var(--accent)}
+.tag{font-size:10px;padding:1px 6px;border-radius:3px;border:1px solid var(--border);color:var(--muted)}
+.keybind{font-size:10px;padding:2px 6px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--accent);cursor:pointer;font-family:inherit}
+.sep{height:1px;background:var(--border);margin:6px 0}
+.section-label{font-size:9px;color:var(--muted);text-transform:uppercase;letter-spacing:1px;margin:8px 0 4px}
+</style>
+
+<div class="shell">
+  <div class="menubar" style="position:relative">
+    <span class="logo">Turtle.Club</span>
+    <div class="vsep"></div>
+    <button class="mbtn active" onclick="switchMain(this,'main')">Main</button>
+    <button class="mbtn" onclick="switchMain(this,'explorer')">Explorer</button>
+    <button class="mbtn" onclick="switchMain(this,'client')">Client</button>
+    <span class="fps" id="fps">-- fps</span>
+  </div>
+
+  <div class="content">
+    <div class="sidebar">
+      <div class="stab active" onclick="switchTab(this,0)"><i class="ti ti-crosshair"></i>Aimbot</div>
+      <div class="stab" onclick="switchTab(this,1)"><i class="ti ti-target"></i>Silent Aim</div>
+      <div class="stab" onclick="switchTab(this,2)"><i class="ti ti-eye"></i>Visuals</div>
+      <div class="stab" onclick="switchTab(this,3)"><i class="ti ti-bolt"></i>Rage</div>
+      <div class="stab" onclick="switchTab(this,4)"><i class="ti ti-settings"></i>Settings</div>
+    </div>
+
+    <div class="main" id="panel-main">
+
+      <div class="panel" id="tab-0">
+        <div class="phead">Aimbot — Main</div>
+        <div class="row">
+          <label>Enabled</label>
+          <span class="keybind">RMB</span>
+          <label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label>
+        </div>
+        <div class="row"><label>Sticky Aim</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Draw FOV</label>
+          <div class="swatch" style="background:#4ade8066"></div>
+          <div class="swatch" style="background:#ffffff22"></div>
+          <label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label>
+        </div>
+        <div class="row"><label>FOV</label><div class="slider-wrap"><input type="range" min="0" max="1000" value="200" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">200</span></div></div>
+        <div class="row"><label>Mode</label><select class="combo"><option>Mouse</option><option>Camera</option></select></div>
+        <div class="sep"></div>
+        <div class="section-label">Settings</div>
+        <div class="row"><label>Target Part</label><select class="combo"><option>Head</option><option>Closest</option><option>HumanoidRootPart</option></select></div>
+        <div class="row"><label>Enable Smoothing</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Smoothing X</label><div class="slider-wrap"><input type="range" min="1" max="100" value="30" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">30</span></div></div>
+        <div class="row"><label>Smoothing Y</label><div class="slider-wrap"><input type="range" min="1" max="100" value="30" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">30</span></div></div>
+        <div class="row"><label>Prediction</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Use FOV</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Team Check</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Knock Check</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+      </div>
+
+      <div class="panel" id="tab-1" style="display:none">
+        <div class="phead">Silent Aim — Main</div>
+        <div class="row"><label>Enabled</label><span class="keybind">X</span><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Sticky Aim</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Draw FOV</label><div class="swatch" style="background:#4ade8066"></div><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Attach FOV to Target</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>FOV</label><div class="slider-wrap"><input type="range" min="0" max="1000" value="150" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">150</span></div></div>
+        <div class="sep"></div>
+        <div class="section-label">Settings</div>
+        <div class="row"><label>Target Part</label><select class="combo"><option>Nearest Point</option><option>Head</option><option>Closest</option></select></div>
+        <div class="row"><label>Use Aimbot Target</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Team Check</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Gun Check</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Knock Check</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Draw Target Dot</label><div class="swatch" style="background:#f87171"></div><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+      </div>
+
+      <div class="panel" id="tab-2" style="display:none">
+        <div class="phead">Visuals — Enemy</div>
+        <div class="row"><label>Enable Enemies</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Box</label><div class="swatch" style="background:#4ade80"></div><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Box Fill</label><div class="swatch" style="background:#4ade8022"></div><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Name</label><div class="swatch" style="background:#fff"></div><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Healthbar</label><div class="swatch" style="background:#4ade80"></div><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Distance</label><div class="swatch" style="background:#aaa"></div><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Chams</label><div class="swatch" style="background:#4ade8044"></div><div class="swatch" style="background:#4ade80"></div><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Flags</label><div class="swatch" style="background:#fbbf24"></div><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="sep"></div>
+        <div class="section-label">Render</div>
+        <div class="row"><label>Box Type</label><select class="combo"><option>Bounding Box</option><option>Cornered Box</option></select></div>
+        <div class="row"><label>Chams Type</label><select class="combo"><option>Highlight</option><option>Cube</option><option>Mesh</option></select></div>
+        <div class="row"><label>Dynamic Healthbar</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Fade In Speed</label><div class="slider-wrap"><input type="range" min="0.1" max="50" step="0.1" value="10" oninput="this.nextElementSibling.textContent=parseFloat(this.value).toFixed(1)"><span class="slider-val">10.0</span></div></div>
+      </div>
+
+      <div class="panel" id="tab-3" style="display:none">
+        <div class="phead">Rage / Movement</div>
+        <div class="row"><label>Speedhack</label><span class="keybind">C</span><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Speed</label><div class="slider-wrap"><input type="range" min="1" max="500" value="80" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">80</span></div></div>
+        <div class="row"><label>Flyhack</label><span class="keybind">V</span><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Fly Speed</label><div class="slider-wrap"><input type="range" min="1" max="500" value="50" oninput="this.nextElementSibling.textContent=this.value"><span class="slider-val">50</span></div></div>
+        <div class="row"><label>Noclip</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Tickrate</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="sep"></div>
+        <div class="section-label">Rage</div>
+        <div class="row"><label>HitSounds</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Hitsound Type</label><select class="combo"><option>Skeet</option><option>Among Us</option><option>Beep</option><option>CSGO</option></select></div>
+        <div class="row"><label>Hit Tracers</label><div class="swatch" style="background:#f87171"></div><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>RapidFire</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Hitbox Expander</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>360 Spin</label><span class="keybind">–</span><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+      </div>
+
+      <div class="panel" id="tab-4" style="display:none">
+        <div class="phead">Settings</div>
+        <div class="row"><label>Menu Keybind</label><span class="keybind">INSERT</span></div>
+        <div class="row"><label>Watermark</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Streamproof</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>V-Sync</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Hide Console</label><label class="chk"><input type="checkbox" checked><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="row"><label>Performance Mode</label><label class="chk"><input type="checkbox"><span class="chk-track"></span><span class="chk-thumb"></span></label></div>
+        <div class="sep"></div>
+        <div class="section-label">Config</div>
+        <div class="row"><label>Config name</label><input style="flex:1;font-family:inherit;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:2px 6px;outline:none" placeholder="my_config"></div>
+        <div style="display:flex;gap:6px;margin-top:6px">
+          <button style="flex:1;font-family:inherit;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--accent);padding:4px;cursor:pointer">Save</button>
+          <button style="flex:1;font-family:inherit;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:var(--text);padding:4px;cursor:pointer">Load</button>
+          <button style="flex:1;font-family:inherit;font-size:11px;background:var(--bg3);border:1px solid var(--border);border-radius:3px;color:#f87171;padding:4px;cursor:pointer">Delete</button>
+        </div>
+        <div class="sep"></div>
+        <button onclick="this.style.color='#f87171'" style="width:100%;font-family:inherit;font-size:11px;background:transparent;border:1px solid #f8717144;border-radius:3px;color:#f87171;padding:5px;cursor:pointer;margin-top:4px">Unload</button>
+      </div>
+
+    </div>
+  </div>
+</div>
+
+<script>
+function switchTab(el, idx){
+  document.querySelectorAll('.stab').forEach(s=>s.classList.remove('active'));
+  el.classList.add('active');
+  document.querySelectorAll('[id^="tab-"]').forEach(p=>p.style.display='none');
+  document.getElementById('tab-'+idx).style.display='block';
+}
+function switchMain(el, view){
+  document.querySelectorAll('.mbtn').forEach(b=>b.classList.remove('active'));
+  el.classList.add('active');
+}
+let f=60,t=0;
+setInterval(()=>{
+  t+=0.05;
+  f=Math.round(59+Math.sin(t)*8+Math.random()*3);
+  document.getElementById('fps').textContent=f+' fps';
+},500);
+</script>
