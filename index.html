@@ -16,20 +16,15 @@
     <link rel="icon" sizes="192x192" href="assets/images/android-chrome-192x192.png" type="image/png">
     <link rel="icon" sizes="512x512" href="assets/images/android-chrome-512x512.png" type="image/png">
     <link rel="stylesheet" href="assets/stylesheets/audio-control.css">
-    <title>Wiremoney</title>
+    <title>Cosmo</title>
 </head>
 
 <body>
-    <div id="overlay">
-        <p><i>Click to Enter</i></p>
-    </div>
+    <!-- Overlay removed to reduce friction -->
 
-    <audio loop id="audio">
-        <source src="palaces.mp3" type="audio/mp3">
-    </audio>
-
-    <video autoplay loop muted id="background-video">
+    <video autoplay loop muted id="background-video" playsinline preload="metadata">
         <source src="assets/videos/video.mp4" type="video/mp4">
+        Your browser does not support the video tag.
       </video>
       
       <div class="audio-control">
@@ -55,8 +50,8 @@
             <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Wiremoney</h1>
             <div id="line" style="border-bottom: 1px solid #e5ebf1;;max-width: 285px;margin: 16px;width: 100%;"></div>
             <div style="flex-wrap: wrap;display: flex;margin: 0;">
-                <a href="https://discord.com/users/865911778235908168" target="_blank" aria-label="discord @ Wiremoney"><i class="fa-brands discord"></i></a> <!--Replace the string of numbers to your user id.-->
-                <a href="https://t.me/wir3money" target="_blank" aria-label="telegram @ wir3money"><i class="fa-brands telegram"></i></a>
+                <a href="https://discord.com/users/1272313208459362344" target="_blank" aria-label="discord @ Wiremoney"><i class="fa-brands discord"></i></a>
+                <a href="https://t.me/CutMyNameOnYou" target="_blank" aria-label="telegram @ wir3money"><i class="fa-brands telegram"></i></a>
                 <a href="https://github.com/wiremoneyy" target="_blank" aria-label="github @ wiremoneyy"><i class="fa-brands github"></i></a>
                 <a href="https://discord.gg/stargazing" target="_blank" aria-label="discord @ stargazing"><i class="fa-brands discord"></i></a>
                 </div>
@@ -69,13 +64,50 @@
     justify-content: center;
 ">
     </footer> 
+
+    <!-- Removed broken script calls - crossorigin issues fixed -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="assets/js/overlay.js"></script>
+    <!-- mute-button.js is correctly linked - ensure file exists in assets/js/ -->
     <script src="assets/js/mute-button.js"></script>
+
+    <!-- Robust video autoplay script -->
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            var video = document.getElementById('background-video');
+            
+            if (video) {
+                // Prevents potential race condition where video isn't ready
+                var startVideo = function() {
+                    var playPromise = video.play();
+                    if (playPromise !== undefined) {
+                        playPromise.then(function() {
+                            console.log('Video playing successfully');
+                        }).catch(function(error) {
+                            console.log('Video play failed: ', error);
+                            // Fallback: Show a poster or handle error gracefully
+                        });
+                    }
+                };
+
+                // Attempt to play immediately if possible
+                startVideo();
+                
+                // Additional backup for any residual autoplay restrictions
+                document.body.addEventListener('click', function() {
+                    if (video.paused) {
+                        startVideo();
+                    }
+                }, { once: true });
+            } else {
+                console.error('Video element not found');
+            }
+        });
+    </script>
+    
     <script language=javascript>
         var rev = "fwd";
         function titlebar(val){
-            var msg  = "Wiremoney ╰（‵□′）╯";
+            var msg  = "Cosmo ╰（‵□′）╯";
             var res = " ";
             var speed = 400;
             var pos = val;
@@ -107,7 +139,6 @@
             }
         }
         titlebar(0);
-    </script>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         <!--hacked by https://github.com/Euro-pol-->
-      
+    </script>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                         
 </body>
 </html>
