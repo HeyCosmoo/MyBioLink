@@ -15,7 +15,6 @@
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" type="image/png">
     <link rel="icon" sizes="192x192" href="assets/images/android-chrome-192x192.png" type="image/png">
     <link rel="icon" sizes="512x512" href="assets/images/android-chrome-512x512.png" type="image/png">
-    <!-- Use the black/dark audio control CSS -->
     <link rel="stylesheet" href="assets/stylesheets/audio-control.css">
     <title>Cosmo - Friends</title>
     <style>
@@ -34,34 +33,70 @@
             transform: scale(1.05);
             color: #ffcc00 !important;
         }
-        /* Adjust the line width and spacing */
         #line {
             max-width: 400px;
             margin: 20px auto;
         }
-        /* Center the friend links nicely */
         .g > div {
             gap: 10px;
             justify-content: center;
         }
+        /* Overlay and video background styles */
+        #overlay {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            background-color: black;
+            color: white;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 2rem;
+            cursor: pointer;
+            z-index: 10000;
+            transition: opacity 0.8s ease;
+        }
+        #overlay.fade-out {
+            opacity: 0;
+            pointer-events: none;
+        }
+        #background-video {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            object-fit: cover;
+            z-index: -2;
+        }
+        body {
+            background-color: black;
+        }
     </style>
 </head>
 
-<body style="background-color: rgb(0, 0, 0);">
+<body>
 
     <div id="overlay">
         <p><i>Click to Enter</i></p>
     </div>
 
-    <video autoplay loop muted id="background-video">
-        <source src="https://pomf2.lain.la/f/08ccw5r.mp4" type="video/mp4">
+    <!-- Background video – now using local sound1.mp4 -->
+    <video autoplay loop muted playsinline id="background-video" preload="auto">
+        <source src="https://files.catbox.moe/th9hgz.mp4" type="video/mp4">
+        Your browser does not support the video tag.
     </video>
 
+    <!-- If you still have House.mp3, keep this; otherwise remove or comment out -->
+    <!--
     <audio loop id="audio">
         <source src="House.mp3" type="audio/mp3">
     </audio>
+    -->
 
-    <!-- Black/dark audio control (same as main page) -->
+    <!-- Black audio control panel -->
     <div class="audio-control">
         <button id="mute-button" aria-label="Mute"></button>
         <div class="slider-container">
@@ -91,6 +126,19 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="assets/js/overlay.js"></script>
     <script src="assets/js/mute-button.js"></script>
+
+    <!-- Overlay click handler (ensures video starts) -->
+    <script>
+        const overlay = document.getElementById('overlay');
+        const video = document.getElementById('background-video');
+        if (overlay && video) {
+            overlay.addEventListener('click', function() {
+                video.play().catch(e => console.log('Video play error:', e));
+                overlay.classList.add('fade-out');
+                setTimeout(() => { overlay.style.display = 'none'; }, 800);
+            });
+        }
+    </script>
 
     <script language="javascript">
         var rev = "fwd";
