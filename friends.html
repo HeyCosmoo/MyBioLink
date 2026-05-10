@@ -5,8 +5,8 @@
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <meta name="description" content="Wiremoney's Biolink">
-    <meta name="keywords" content="Wiremoney, HCF, minecraft, Biolink">
+    <meta name="description" content="Cosmo's Biolink">
+    <meta name="keywords" content="cosmo, HCF, minecraft, Biolink">
     <link rel="stylesheet" href="assets/stylesheets/icons.css">
     <link rel="stylesheet" href="assets/stylesheets/style.css">
     <link rel="shortcut icon" href="assets/images/favicon.ico" type="image/x-icon">
@@ -15,11 +15,11 @@
     <link rel="apple-touch-icon" href="assets/images/apple-touch-icon.png" type="image/png">
     <link rel="icon" sizes="192x192" href="assets/images/android-chrome-192x192.png" type="image/png">
     <link rel="icon" sizes="512x512" href="assets/images/android-chrome-512x512.png" type="image/png">
-    <link rel="stylesheet" href="assets/stylesheets/autumn-audio-control.css">
-    <title>Wiremoney</title> 
+    <!-- Use the black/dark audio control CSS instead of autumn -->
+    <link rel="stylesheet" href="assets/stylesheets/audio-control.css">
+    <title>Cosmo</title>
 </head>
 
-<body>
 <body style="background-color: rgb(0, 0, 0);">
 
     <div id="overlay">
@@ -28,55 +28,48 @@
 
     <video autoplay loop muted id="background-video">
         <source src="https://pomf2.lain.la/f/08ccw5r.mp4" type="video/mp4">
-      </video>
+    </video>
 
     <audio loop id="audio">
         <source src="House.mp3" type="audio/mp3">
     </audio>
 
-    <div class="autumn-audio-control">
-        <button id="autumn-mute-button" aria-label="Mute">
-        </button>
-        <div class="autumn-slider-container">
-            <input type="range" id="autumn-volume-slider" min="0" max="1" step="0.01" value="1">
+    <!-- Changed from autumn-audio-control to audio-control (black/dark theme) -->
+    <div class="audio-control">
+        <button id="mute-button" aria-label="Mute"></button>
+        <div class="slider-container">
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
         </div>
     </div>
-    
-    <header id="entrypoint">
 
+    <header id="entrypoint">
         <section>
             <div class="g">
-                <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Sagnet</h1>
+                <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Friends</h1>
                 <div id="line" style="border-bottom: 1px solid #e5ebf1; max-width: 400px; margin: 16px; width: 100%;"></div>
                 <div style="flex-wrap: wrap;display: flex;margin: 0;">
-                <a href="https://nest.rip/bhop" target="_blank" style="color: rgb(255, 255, 255);">Bhop</a>
-                <a href="https://woosh.lat/" target="_blank" style="color: rgb(255, 255, 255);">Woosh</a>
-                <a href="https://cortex.pics" target="_blank" style="color: rgb(255, 255, 255);">Cortex</a>
-                <a href="https://t.me/ghostsending" target="_blank" style="color: rgb(255, 255, 255)">Sag</a>
-                <a href="https://guns.lol/skid" target="_blank" style="color: rgb(255, 255, 255)">Nyx</a>
-                <a href="https://vmohammad.dev/" target="_blank" style="color: rgb(255, 255, 255)">VMohammad</a>
-                    </div>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255);">"user"</a>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255);">"user"</a>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255);">"user"</a>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
+                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
                 </div>
             </div>
         </section>
-                </div>
-            </div>
-        </div>
-    </section>
-    <footer style="
-    padding: 16px;
-    display: flex;
-    justify-content: center;
-">
-    </footer> 
+    </header>
+
+    <footer style="padding: 16px; display: flex; justify-content: center;"></footer>
+
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
-    <script src="assets/js/overlay.js"></script>     
-    <script src="assets/js/autumn-mute-button.js"></script>
-    <script language=javascript>
+    <script src="assets/js/overlay.js"></script>
+    <!-- Use mute-button.js instead of autumn-mute-button.js -->
+    <script src="assets/js/mute-button.js"></script>
+
+    <script language="javascript">
         var rev = "fwd";
         function titlebar(val){
-            var msg  = "SAGNET";
-            var res = " ";
+            var msg  = "COSMO";
             var speed = 500;
             var pos = val;
             var le = msg.length;
@@ -107,7 +100,7 @@
             }
         }
         titlebar(0);
-    </script>                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                                       <!--hacked by https://github.com/Euro-pol-->
-      
+    </script>
 </body>
+
 </html>
