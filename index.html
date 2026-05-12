@@ -30,7 +30,11 @@
             font-size: 1.8rem;
             font-weight: bold;
             text-decoration: none;
-            transition: color 0.3s ease;
+            transition: color 0.3s ease, transform 0.2s;
+        }
+        .lnk:hover {
+            color: #ffcc00 !important;
+            transform: scale(1.00);
         }
         
         /* Make the social icons MUCH bigger */
@@ -85,6 +89,21 @@
         body {
             background-color: black;
         }
+
+        /* Style for the new Shop link */
+        .shop-link {
+            margin-right: auto;
+            font-size: 2rem;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+            transition: color 0.3s ease, transform 0.2s;
+            display: inline-block;
+        }
+        .shop-link:hover {
+            color: #ffcc00 !important;
+            transform: scale(1.00);
+        }
     </style>
 </head>
 
@@ -104,7 +123,7 @@
     <div class="audio-control">
         <button id="mute-button" aria-label="Mute"></button>
         <div class="slider-container">
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
         </div>
     </div>
 
@@ -112,7 +131,8 @@
     <header id="entrypoint">
         <nav>
             <div style="display: flex; align-items: center; padding: 30px 10%; flex-wrap: wrap;">
-                <span style="margin-right: auto; font-size: 2rem;">Cosmo</span>
+                <!-- Changed from "Cosmo" text to "Shop" link -->
+                <a href="https://cosmoo.mysellauth.com/" target="_blank" class="shop-link">Shop</a>
                 <a href="friends.html" class="lnk"><span style="color:var(--accent);">My</span> Friends</a>
             </div>
         </nav>
@@ -126,7 +146,7 @@
             <div style="flex-wrap: wrap; display: flex; margin: 20px 0;">
                 <a href="https://discord.com/users/1272313208459362344" target="_blank" aria-label="discord"><i class="fa-brands discord"></i></a>
                 <a href="https://t.me/CutMyNameOnYou" target="_blank" aria-label="telegram"><i class="fa-brands telegram"></i></a>
-                <a href="https://github.com/HeyCosmoo target="_blank" aria-label="github"><i class="fa-brands github"></i></a>
+                <a href="https://github.com/cosmo-lang" target="_blank" aria-label="github"><i class="fa-brands github"></i></a>
             </div>
         </div>
     </section>
