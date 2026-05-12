@@ -74,72 +74,119 @@
         body {
             background-color: black;
         }
+
+        /* ----- Simple "Back" link - no extra styling, just plain text ----- */
+        .back-link {
+            font-size: 1.6rem;
+            font-weight: 500;
+            color: white;
+            text-decoration: none;
+            transition: color 0.2s ease;
+            display: inline-block;
+            font-family: inherit;
+        }
+        .back-link:hover {
+            color: #ffcc00;
+        }
+        /* Navigation container: keeps Back at left top, no extra roundness or background */
+        .nav-container {
+            display: flex;
+            align-items: center;
+            justify-content: flex-start;
+            padding: 24px 5% 10px 5%;
+            flex-wrap: wrap;
+        }
+        @media (max-width: 680px) {
+            .nav-container {
+                padding: 18px 5% 8px 5%;
+            }
+            .back-link {
+                font-size: 1.4rem;
+            }
+        }
+        /* Keep rest of the page consistent */
+        footer {
+            padding: 16px;
+            display: flex;
+            justify-content: center;
+        }
     </style>
 </head>
-
 <body>
 
+    <!-- initial overlay: click to enter -->
     <div id="overlay">
         <p><i>Click to Enter</i></p>
     </div>
 
-    <!-- Background video – now using local sound1.mp4 -->
+    <!-- background video immersive -->
     <video autoplay loop muted playsinline id="background-video" preload="auto">
         <source src="https://files.catbox.moe/th9hgz.mp4" type="video/mp4">
         Your browser does not support the video tag.
     </video>
 
-    <!-- If you still have House.mp3, keep this; otherwise remove or comment out -->
-    <!--
+    <!-- background music -->
     <audio loop id="audio">
         <source src="House.mp3" type="audio/mp3">
     </audio>
-    -->
 
-    <!-- Black audio control panel -->
+    <!-- audio control panel -->
     <div class="audio-control">
         <button id="mute-button" aria-label="Mute"></button>
         <div class="slider-container">
-            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="1">
+            <input type="range" id="volume-slider" min="0" max="1" step="0.01" value="0.3">
         </div>
     </div>
 
+    <!-- Header with plain "Back" link to index.html -->
     <header id="entrypoint">
-        <section>
-            <div class="g">
-                <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Friends</h1>
-                <div id="line" style="border-bottom: 1px solid #e5ebf1; max-width: 400px; margin: 16px; width: 100%;"></div>
-                <div style="flex-wrap: wrap; display: flex; margin: 0; justify-content: center;">
-                    <a href="https://slat.cc/toxi" target="_blank" style="color: rgb(255, 255, 255);">Ionut</a>
-                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255);">"user"</a>
-                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255);">"user"</a>
-                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
-                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
-                    <a href="https://link/" target="_blank" style="color: rgb(255, 255, 255)">"user"</a>
-                </div>
+        <nav>
+            <div class="nav-container">
+                <!-- simple text link: no background, no border, no extra "thing" -->
+                <a href="index.html" class="back-link">Back</a>
             </div>
-        </section>
+        </nav>
     </header>
 
-    <footer style="padding: 16px; display: flex; justify-content: center;"></footer>
+    <!-- Friends section -->
+    <section>
+        <div class="g">
+            <h1 style="font-size:24px;margin-bottom: 0;font-weight: 400;">Friends</h1>
+            <div id="line" style="border-bottom: 1px solid #e5ebf1; max-width: 400px; margin: 16px; width: 100%;"></div>
+            <div style="flex-wrap: wrap; display: flex; margin: 0; justify-content: center;">
+                <a href="https://slat.cc/toxi" target="_blank" style="color: rgb(255, 255, 255);">Ionut</a>
+                <a href="https://guns.lol/oq" target="_blank" style="color: rgb(255, 255, 255);">Oq</a>
+                <a href="https://guns.lol/clean" target="_blank" style="color: rgb(255, 255, 255);">Noah</a>
+                <a href="https://kuhaku.world/" target="_blank" style="color: rgb(255, 255, 255)">Kuhaku</a>
+            </div>
+        </div>
+    </section>
 
+    <footer></footer>
+
+    <!-- external scripts (overlay & audio) -->
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
     <script src="assets/js/overlay.js"></script>
     <script src="assets/js/mute-button.js"></script>
 
-    <!-- Overlay click handler (ensures video starts) -->
+    <!-- overlay click to unmute video+audio -->
     <script>
-        const overlay = document.getElementById('overlay');
-        const video = document.getElementById('background-video');
-        if (overlay && video) {
-            overlay.addEventListener('click', function() {
-                video.play().catch(e => console.log('Video play error:', e));
-                overlay.classList.add('fade-out');
-                setTimeout(() => { overlay.style.display = 'none'; }, 800);
-            });
-        }
+        (function() {
+            const overlay = document.getElementById('overlay');
+            const video = document.getElementById('background-video');
+            const audio = document.getElementById('audio');
+            if (overlay && video && audio) {
+                overlay.addEventListener('click', function() {
+                    video.play().catch(e => console.log('Video play error:', e));
+                    audio.play().catch(e => console.log('Audio play error:', e));
+                    overlay.classList.add('fade-out');
+                    setTimeout(() => { overlay.style.display = 'none'; }, 800);
+                });
+            }
+        })();
     </script>
 
+    <!-- animated title effect -->
     <script language="javascript">
         var rev = "fwd";
         function titlebar(val){
@@ -176,5 +223,4 @@
         titlebar(0);
     </script>
 </body>
-
 </html>
