@@ -30,27 +30,6 @@
             min-height: 100vh;
         }
 
-        /* "Friends" link — top left corner, identical style to old friends.html (plain, clean) */
-        .nav-friends {
-            position: fixed;
-            top: 24px;
-            left: 5%;
-            font-size: 1.6rem;
-            font-weight: 500;
-            color: white;
-            text-decoration: none;
-            transition: color 0.2s ease;
-            font-family: inherit;
-            z-index: 100;
-            background: transparent;
-            padding: 0;
-            letter-spacing: -0.2px;
-        }
-
-        .nav-friends:hover {
-            color: #ffcc00;
-        }
-
         /* main container — minimal spacing */
         .main-container {
             max-width: 720px;
@@ -182,11 +161,6 @@
 
         /* responsive */
         @media (max-width: 680px) {
-            .nav-friends {
-                top: 18px;
-                left: 5%;
-                font-size: 1.4rem;
-            }
             .main-container {
                 padding: 80px 20px 56px;
             }
@@ -212,9 +186,6 @@
     </style>
 </head>
 <body>
-
-    <!-- "Friends" link — top left corner exactly like old style (plain, same hover) -->
-    <a href="https://www.cosmo.baby/friends.html" class="nav-friends">Friends</a>
 
     <main class="main-container">
         <!-- minimal heading -->
