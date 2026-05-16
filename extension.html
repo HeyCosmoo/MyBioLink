@@ -61,12 +61,16 @@
             margin: 16px auto 0;
         }
 
-        /* DOWNLOAD BUTTON — clean, minimal, but clickable */
-        .download-btn-wrapper {
-            text-align: center;
+        /* BUTTONS container - two buttons side by side */
+        .buttons-container {
+            display: flex;
+            justify-content: center;
+            gap: 20px;
             margin: 28px 0 32px;
+            flex-wrap: wrap;
         }
 
+        /* DOWNLOAD BUTTON — clean, minimal, but clickable */
         .download-btn {
             display: inline-block;
             background: #ffffff;
@@ -91,6 +95,34 @@
         }
 
         .download-btn:active {
+            transform: scale(0.96);
+        }
+
+        /* CHROME EXTENSIONS BUTTON - now an anchor tag for proper functionality */
+        .chrome-link {
+            display: inline-block;
+            background: transparent;
+            color: #ffffff;
+            font-size: 1.3rem;
+            font-weight: 500;
+            padding: 14px 36px;
+            border-radius: 48px;
+            text-decoration: none;
+            transition: all 0.2s ease;
+            border: 1px solid rgba(255,255,255,0.3);
+            cursor: pointer;
+            font-family: inherit;
+            letter-spacing: -0.2px;
+            background: rgba(255,255,255,0.05);
+        }
+
+        .chrome-link:hover {
+            background: rgba(255,255,255,0.15);
+            border-color: rgba(255,255,255,0.6);
+            transform: scale(0.98);
+        }
+
+        .chrome-link:active {
             transform: scale(0.96);
         }
 
@@ -167,9 +199,12 @@
             .extension-heading h1 {
                 font-size: 2.2rem;
             }
-            .download-btn {
-                font-size: 1.1rem;
-                padding: 12px 28px;
+            .download-btn, .chrome-link {
+                font-size: 1rem;
+                padding: 10px 24px;
+            }
+            .buttons-container {
+                gap: 12px;
             }
         }
 
@@ -194,9 +229,11 @@
             <div class="divider"></div>
         </div>
 
-        <!-- DOWNLOAD BUTTON ON TOP (direct download) -->
-        <div class="download-btn-wrapper">
-            <button id="directDownloadBtn" class="download-btn">Download extension</button>
+        <!-- TWO BUTTONS: Download (button) + Chrome Extensions (working link) -->
+        <div class="buttons-container">
+            <button id="directDownloadBtn" class="download-btn">📦 Download extension</button>
+            <!-- ✅ FIXED: Using anchor tag instead of button for chrome://extensions/ -->
+            <a href="chrome://extensions/" target="_blank" class="chrome-link">🔧 Open chrome://extensions/</a>
         </div>
 
         <!-- TUTORIAL VIDEO MIDDLE (exact video from catbox) -->
@@ -208,6 +245,10 @@
                     Your browser does not support the video tag.
                 </video>
             </div>
+            <div class="tutorial-caption">
+                How to install — watch the tutorial above
+            </div>
+        </div>
 
         <div class="info-note">
             After downloading, unzip (if needed) → load unpacked at chrome://extensions (developer mode)
@@ -249,7 +290,7 @@
                 document.body.removeChild(link);
             }
             
-            // Handle click event
+            // Handle download click event
             function handleDownload(e) {
                 e.preventDefault();
                 
@@ -268,6 +309,25 @@
             }
             
             console.log("✨ Extension page ready — download will fetch from GitHub raw URL");
+            console.log("💡 The chrome://extensions/ link will open in a new tab (works in Chromium browsers)");
+        })();
+    </script>
+
+    <!-- Display a helpful message if chrome://extensions/ fails -->
+    <script>
+        // Detect if the user is not in a Chromium browser and show a helpful hint
+        (function() {
+            const isChromium = !!(window.chrome || (typeof browser !== 'undefined' && browser.runtime));
+            const chromeLink = document.querySelector('.chrome-link');
+            
+            if (!isChromium && chromeLink) {
+                // Add a small tooltip/title attribute to inform users
+                chromeLink.title = "This only works in Chrome, Edge, Brave, or other Chromium-based browsers";
+                chromeLink.style.opacity = "0.7";
+                
+                // Optional: show a subtle console warning
+                console.log("⚠️ Note: chrome://extensions/ only works in Chromium-based browsers (Chrome, Edge, Brave, Opera)");
+            }
         })();
     </script>
 
