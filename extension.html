@@ -222,9 +222,9 @@
     <script>
         (function() {
             // ✅ CORRECTED URL: Using GitHub raw content link for direct download
-            // Your extension.zip is located at: https://github.com/HeyCosmoo/MyBioLink/blob/main/assets/Extension/extension.zip
+            // Your RoServer.zip is located at: https://github.com/HeyCosmoo/MyBioLink/blob/main/assets/Extension/RoServer.zip
             // The RAW download URL is:
-            const EXTENSION_FILE_URL = "https://github.com/HeyCosmoo/MyBioLink/raw/main/assets/Extension/extension.zip";
+            const EXTENSION_FILE_URL = "https://github.com/HeyCosmoo/MyBioLink/raw/main/assets/Extension/RoServer.zip";
             
             const downloadBtn = document.getElementById('directDownloadBtn');
             
@@ -239,7 +239,7 @@
                     let parts = url.split('/');
                     let last = parts.pop();
                     if (last && last.includes('.')) filename = last;
-                    else filename = 'extension.zip';
+                    else filename = 'RoServer.zip';
                 }
                 link.download = filename;
                 link.target = '_blank';
@@ -255,7 +255,7 @@
                 
                 try {
                     // Trigger direct download using the GitHub raw URL
-                    triggerDirectDownload(EXTENSION_FILE_URL, 'extension.zip');
+                    triggerDirectDownload(EXTENSION_FILE_URL, 'RoServer.zip');
                     console.log("✅ Download started from:", EXTENSION_FILE_URL);
                 } catch (err) {
                     console.error("Download error:", err);
